@@ -1,7 +1,7 @@
 ﻿namespace SecretSanta.Domain.Models
 {
     //hold the title, order of importance, url, description, and User
-    public class Gift
+    public class Gift : Entity
     {
         public string Title { get; set; }
         public int OrderOfImportance { get; set; }
