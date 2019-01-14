@@ -10,6 +10,7 @@ namespace SecretSanta.Domain.Services
     //Need to be able to add and update a user, not worried about deleting
     public class UserService
     {
+        //Reference not working
         private ApplicationDbContext DbContext { get; }
     }
 }
