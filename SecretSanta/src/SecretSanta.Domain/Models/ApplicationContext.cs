@@ -7,9 +7,6 @@ namespace SecretSanta.Domain.Models
         public DbSet<User> Users { get; set; }
     
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-    
-        }
+            : base(options){ }
     }  
 }
