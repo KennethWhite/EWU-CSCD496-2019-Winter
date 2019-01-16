@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SecretSanta.Domain.Models;
@@ -10,12 +8,12 @@ namespace SecretSanta.Domain.Services
     //Need to be able to add and update a user, not worried about deleting
     public class UserService
     {
-        private ApplicationDbContext DbContext { get; }
-
         public UserService(ApplicationDbContext context)
         {
             DbContext = context;
         }
+
+        private ApplicationDbContext DbContext { get; }
 
         public User AddOrUpdateUser(User user)
         {
@@ -40,6 +38,5 @@ namespace SecretSanta.Domain.Services
             userTask.Wait();
             return userTask.Result;
         }
-
     }
 }

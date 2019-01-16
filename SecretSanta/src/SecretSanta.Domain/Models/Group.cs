@@ -6,6 +6,6 @@ namespace SecretSanta.Domain.Models
     public class Group : Entity
     {
         public string Title { get; set; }
-        List<User> Users { get; set; }
+        private List<User> Users { get; set; }
     }
 }

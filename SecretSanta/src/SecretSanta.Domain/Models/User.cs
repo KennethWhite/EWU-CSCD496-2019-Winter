@@ -1,7 +1,4 @@
-﻿using SecretSanta.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace SecretSanta.Domain.Models
 {
@@ -10,7 +7,7 @@ namespace SecretSanta.Domain.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        List<Gift> Wishlist { get; set; }
+        private List<Gift> Wishlist { get; set; }
         public List<Group> Groups { get; set; }
         public List<Gift> Gifts { get; set; }
     }
