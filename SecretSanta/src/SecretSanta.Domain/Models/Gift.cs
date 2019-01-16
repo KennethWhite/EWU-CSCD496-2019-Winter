@@ -7,6 +7,6 @@
         public int OrderOfImportance { get; set; }
         public string URL { get; set; }
         public string Description { get; set; }
-        public User User { get; set; }  //Potentially multiple users could list the same item, this could be a list to reduce duplication
+        public User User { get; set; }
     }
 }

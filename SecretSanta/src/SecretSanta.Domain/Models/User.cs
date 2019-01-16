@@ -12,5 +12,6 @@ namespace SecretSanta.Domain.Models
         public string LastName { get; set; }
         List<Gift> Wishlist { get; set; }
         public List<Group> Groups { get; set; }
+        public List<Gift> Gifts { get; set; }
     }
 }

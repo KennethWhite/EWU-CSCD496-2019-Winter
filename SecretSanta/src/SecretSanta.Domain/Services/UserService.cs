@@ -16,30 +16,28 @@ namespace SecretSanta.Domain.Services
         {
             DbContext = context;
         }
-        
-        public void UpsertUser(User user)
+
+        public User AddOrUpdateUser(User user)
         {
             if (user.Id == default(int))
-            {
                 DbContext.Users.Add(user);
-            }
             else
-            {
                 DbContext.Users.Update(user);
-            }
             DbContext.SaveChanges();
+
+            return user;
         }
 
         public User Find(int id)
         {
-            return DbContext.Users.Find(id);
+            return DbContext.Users.Include(user => user.Gifts)
+                .SingleOrDefault(user => user.Id == id);
         }
 
         public List<User> FetchAll()
         {
             var userTask = DbContext.Users.ToListAsync();
             userTask.Wait();
-
             return userTask.Result;
         }
 
