@@ -14,7 +14,7 @@ namespace SecretSanta.Domain.Tests.Services
     {
         private SqliteConnection SqliteConnection { get; set; }
         private DbContextOptions<ApplicationDbContext> Options { get; set; }
-        
+
         [TestInitialize]
         public void OpenConnection()
         {
@@ -38,7 +38,7 @@ namespace SecretSanta.Domain.Tests.Services
         {
             SqliteConnection.Close();
         }
-        
+
         [TestMethod]
         public void FindPairing_CreatedPairingIsRetrievedFromDatabase()
         {
@@ -57,7 +57,82 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreEqual("Kris", fetchedPairing.Santa.FirstName);
             }
         }
+
+        [TestMethod]
+        public void FindPairingID2_CreatedPairingIsRetrievedFromDatabase()
+        {
+            var pairingList = CreateThreePairings();
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new PairingService(context);
+                service.AddOrUpdatePairing(pairingList[0]);
+                service.AddOrUpdatePairing(pairingList[1]);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new PairingService(context);
+                var fetchedPairing = service.Find(2);
+                Assert.AreEqual(2, fetchedPairing.Id);
+                Assert.AreEqual(pairingList[1].Recipient.FirstName, fetchedPairing.Recipient.FirstName);
+                Assert.AreEqual(pairingList[1].Santa.FirstName, fetchedPairing.Santa.FirstName);
+            }
+        }
         
+        [TestMethod]
+        public void UpdatePairing_PairingIsUpdatedInTheDatabase()
+        {
+            var myPairing = CreatePairing();
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new PairingService(context);
+                service.AddOrUpdatePairing(myPairing);
+            }
+
+            myPairing.Recipient = CreateUser("New","Recipient");
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new PairingService(context);
+                service.AddOrUpdatePairing(myPairing);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new PairingService(context);
+                var fetchedPairing = service.Find(1);
+                Assert.AreEqual(1, fetchedPairing.Id);
+                Assert.AreEqual("New", fetchedPairing.Recipient.FirstName);
+                Assert.AreEqual("Recipient", fetchedPairing.Recipient.LastName);
+            }
+        }
+       
+        [TestMethod]
+        public void FetchPairings_CreatedPairingsAreRetrievedFromDatabase()
+        {
+            var pairingsToAdd = CreateThreePairings();
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new PairingService(context);
+                service.AddPairings(pairingsToAdd);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new PairingService(context);
+                var fetchedPairings = service.FetchAll();
+                for (var i = 0; i < fetchedPairings.Count; i++)
+                {
+                    var pairingToAdd = pairingsToAdd[i];
+                    var pairingFetched = fetchedPairings[i];
+                    Assert.AreEqual(pairingToAdd.Id, pairingFetched.Id);
+                    Assert.AreEqual(pairingToAdd.Recipient.FirstName, pairingFetched.Recipient.FirstName);
+                    Assert.AreEqual(pairingToAdd.Santa.FirstName, pairingFetched.Santa.FirstName);
+                }
+            }
+        }
+
         private static ILoggerFactory GetLoggerFactory()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
@@ -78,7 +153,7 @@ namespace SecretSanta.Domain.Tests.Services
                 Santa = santa ?? CreateUser("Kris", "Kringle")
             };
         }
-        
+
         private static User CreateUser(string firstName = "Bob", string lastName = "Ross")
         {
             var user = new User
@@ -99,6 +174,28 @@ namespace SecretSanta.Domain.Tests.Services
 
             user.Gifts = new List<Gift> {gift};
             return user;
+        }
+
+        private static List<Pairing> CreateThreePairings()
+        {
+            return new List<Pairing>
+            {
+                new Pairing
+                {
+                    Recipient = new User {FirstName = "Bob", LastName = "Ross"},
+                    Santa = new User {FirstName = "Steve", LastName = "Irwin"}
+                },
+                new Pairing
+                {
+                    Recipient = new User {FirstName = "Mark", LastName = "Michaelis"},
+                    Santa = new User {FirstName = "Kevin", LastName = "Bost"}
+                },
+                new Pairing
+                {
+                    Recipient = new User {FirstName = "Michael", LastName = "Stokesbary"},
+                    Santa = new User {FirstName = "Kenny", LastName = "White"}
+                }
+            };
         }
     }
 }
