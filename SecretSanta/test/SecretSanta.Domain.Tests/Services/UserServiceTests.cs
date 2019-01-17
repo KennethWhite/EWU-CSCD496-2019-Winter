@@ -45,7 +45,6 @@ namespace SecretSanta.Domain.Tests.Services
             using (var dbContext = new ApplicationDbContext(Options))
             {
                 var service = new UserService(dbContext);
-                //var user = CreateUser();
                 var userFromDb = service.AddOrUpdateUser(CreateUser());
                 Assert.AreNotEqual(0, userFromDb.Id);
             }
@@ -57,8 +56,7 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new UserService(context);
-                var myUser = CreateUser();
-                service.AddOrUpdateUser(myUser);
+                service.AddOrUpdateUser(CreateUser());
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -66,6 +64,36 @@ namespace SecretSanta.Domain.Tests.Services
                 var service = new UserService(context);
                 var fetchedUser = service.Find(1);
                 Assert.AreEqual(1, fetchedUser.Id);
+            }
+        }
+
+        [TestMethod]
+        public void UpdateUser_UserIsUpdatedInTheDatabase()
+        {
+            var myUser = CreateUser();
+            
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                service.AddOrUpdateUser(myUser);
+            }
+
+            myUser.FirstName = "Steve";
+            myUser.LastName = "Irwin";
+            
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                service.AddOrUpdateUser(myUser);
+            }
+            
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                var fetchedUser = service.Find(1);
+                Assert.AreEqual(1, fetchedUser.Id);
+                Assert.AreEqual("Steve", fetchedUser.FirstName);
+                Assert.AreEqual("Irwin", fetchedUser.LastName);
             }
         }
 
