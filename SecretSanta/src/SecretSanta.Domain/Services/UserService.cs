@@ -32,6 +32,7 @@ namespace SecretSanta.Domain.Services
             DbContext.SaveChanges();
             return users;
         }
+        
 
         public User Find(int id)
         {

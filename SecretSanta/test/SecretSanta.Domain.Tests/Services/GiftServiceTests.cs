@@ -122,6 +122,35 @@ namespace SecretSanta.Domain.Tests.Services
         }
 
         [TestMethod]
+        public void RemoveGift_GiftIsRemovedFromUser()
+        {
+            var user = new User {FirstName = "Steve", LastName = "Irwin", Gifts = CreateFiveGifts()};
+            using (var context = new ApplicationDbContext(Options))
+            {
+                new UserService(context).AddOrUpdateUser(user);
+            }
+
+            var initialGifts = CreateFiveGifts();
+            int initialCount = initialGifts.Count, numOfGiftsRemoved = 0;
+            while (user.Gifts.Count > 0)
+            {
+                using (var context = new ApplicationDbContext(Options))
+                {
+                    var fetchedUser = new UserService(context).Find(user.Id);
+                    Assert.AreEqual(initialCount - numOfGiftsRemoved, fetchedUser.Gifts.Count);
+                    Assert.AreEqual(initialGifts[numOfGiftsRemoved].Title, fetchedUser.Gifts[0].Title);
+                    Assert.AreEqual(initialGifts[numOfGiftsRemoved].Description, fetchedUser.Gifts[0].Description);
+                }
+                
+                using (var context = new ApplicationDbContext(Options))
+                {
+                    new GiftService(context).RemoveGift(user.Gifts[0]);
+                    numOfGiftsRemoved++;
+                }
+            }
+        }
+
+        [TestMethod]
         public void FetchGifts_CreatedGiftsAreRetrievedFromDatabase()
         {
             var giftsToAdd = CreateFiveGifts();
@@ -141,31 +170,25 @@ namespace SecretSanta.Domain.Tests.Services
                     var giftFetched = fetchedGifts[i];
                     Assert.AreEqual(giftToAdd.Id, giftFetched.Id);
                     Assert.AreEqual(giftToAdd.Title, giftFetched.Title);
-                    Assert.AreEqual(giftToAdd.Description, giftFetched.Description);
-                    Assert.AreEqual(giftToAdd.URL, giftFetched.URL);
                 }
             }
         }
 
         private static Gift CreateGift()
         {
-            var user = new User
-            {
-                FirstName = "Bob",
-                LastName = "Ross"
-            };
-
-            var gift = new Gift
+            return new Gift
             {
                 Title = "The Pragmatic Programmer",
                 Description = "Book by Andrew Hunt and David Thomas",
                 OrderOfImportance = 1,
                 URL =
                     "https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X/ref=sr_1_1?ie=UTF8&qid=1547613186&sr=8-1&keywords=the+pragmatic+programmer",
-                User = user
+                User = new User
+                {
+                    FirstName = "Bob",
+                    LastName = "Ross"
+                }
             };
-
-            return gift;
         }
 
         private static List<Gift> CreateFiveGifts()

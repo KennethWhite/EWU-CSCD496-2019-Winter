@@ -8,7 +8,7 @@ namespace SecretSanta.Domain.Services
     public class PairingService
     {
         private ApplicationDbContext DbContext { get; }
-        
+
         public PairingService(ApplicationDbContext context)
         {
             DbContext = context;
@@ -24,14 +24,14 @@ namespace SecretSanta.Domain.Services
 
             return pairing;
         }
-        
+
         public ICollection<Pairing> AddPairings(ICollection<Pairing> pairings)
         {
             DbContext.AddRange(pairings);
             DbContext.SaveChanges();
             return pairings;
         }
-        
+
         public Pairing Find(int id)
         {
             return DbContext.Pairings.Include(pairing => pairing.Recipient)

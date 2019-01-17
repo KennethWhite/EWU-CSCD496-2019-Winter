@@ -78,7 +78,7 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreEqual(pairingList[1].Santa.FirstName, fetchedPairing.Santa.FirstName);
             }
         }
-        
+
         [TestMethod]
         public void UpdatePairing_PairingIsUpdatedInTheDatabase()
         {
@@ -90,7 +90,7 @@ namespace SecretSanta.Domain.Tests.Services
                 service.AddOrUpdatePairing(myPairing);
             }
 
-            myPairing.Recipient = CreateUser("New","Recipient");
+            myPairing.Recipient = new User {FirstName = "New", LastName = "Recipient"};
 
             using (var context = new ApplicationDbContext(Options))
             {
@@ -107,7 +107,7 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreEqual("Recipient", fetchedPairing.Recipient.LastName);
             }
         }
-       
+
         [TestMethod]
         public void FetchPairings_CreatedPairingsAreRetrievedFromDatabase()
         {
@@ -145,35 +145,13 @@ namespace SecretSanta.Domain.Tests.Services
             return serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
         }
 
-        private static Pairing CreatePairing(User recipient = null, User santa = null)
+        private static Pairing CreatePairing()
         {
             return new Pairing
             {
-                Recipient = recipient ?? CreateUser("Steve", "Irwin"),
-                Santa = santa ?? CreateUser("Kris", "Kringle")
+                Recipient = new User {FirstName = "Steve", LastName = "Irwin"},
+                Santa = new User {FirstName = "Kris", LastName = "Kringle"}
             };
-        }
-
-        private static User CreateUser(string firstName = "Bob", string lastName = "Ross")
-        {
-            var user = new User
-            {
-                FirstName = firstName,
-                LastName = lastName
-            };
-
-            var gift = new Gift
-            {
-                Title = "The Pragmatic Programmer",
-                Description = "Book by Andrew Hunt and David Thomas",
-                OrderOfImportance = 1,
-                URL =
-                    "https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X/ref=sr_1_1?ie=UTF8&qid=1547613186&sr=8-1&keywords=the+pragmatic+programmer",
-                User = user
-            };
-
-            user.Gifts = new List<Gift> {gift};
-            return user;
         }
 
         private static List<Pairing> CreateThreePairings()

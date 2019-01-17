@@ -24,6 +24,12 @@ namespace SecretSanta.Domain.Services
 
             return gift;
         }
+
+        public void RemoveGift(Gift gift)
+        {
+            DbContext.Gifts.Remove(gift);    //this removes from database completely, not just user
+            DbContext.SaveChanges();
+        }
         
         public ICollection<Gift> AddGifts(ICollection<Gift> gifts)
         {
