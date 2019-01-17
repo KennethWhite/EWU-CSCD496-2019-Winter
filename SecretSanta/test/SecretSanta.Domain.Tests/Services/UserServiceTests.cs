@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
@@ -21,6 +23,8 @@ namespace SecretSanta.Domain.Tests.Services
 
             Options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlite(SqliteConnection)
+                .UseLoggerFactory(GetLoggerFactory())
+                .EnableSensitiveDataLogging()
                 .Options;
 
             using (var context = new ApplicationDbContext(Options))
@@ -41,8 +45,8 @@ namespace SecretSanta.Domain.Tests.Services
             using (var dbContext = new ApplicationDbContext(Options))
             {
                 var service = new UserService(dbContext);
-                var user = CreateUser();
-                var userFromDb = service.AddOrUpdateUser(user);
+                //var user = CreateUser();
+                var userFromDb = service.AddOrUpdateUser(CreateUser());
                 Assert.AreNotEqual(0, userFromDb.Id);
             }
         }
@@ -54,7 +58,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new UserService(context);
                 var myUser = CreateUser();
-                var persistedUser = service.AddOrUpdateUser(myUser);
+                service.AddOrUpdateUser(myUser);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -62,6 +66,31 @@ namespace SecretSanta.Domain.Tests.Services
                 var service = new UserService(context);
                 var fetchedUser = service.Find(1);
                 Assert.AreEqual(1, fetchedUser.Id);
+            }
+        }
+
+        [TestMethod]
+        public void FetchUsers_CreatedUsersAreRetrievedFromDatabase()
+        {
+            var usersToAdd = CreateFiveUsers();
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                service.AddUsers(usersToAdd);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                var fetchedUsers = service.FetchAll();
+                for (var i = 0; i < fetchedUsers.Count; i++)
+                {
+                    var userToAdd = usersToAdd[i];
+                    var userFetched = fetchedUsers[i];
+                    Assert.AreEqual(userToAdd.Id, userFetched.Id);
+                    Assert.AreEqual(userToAdd.FirstName, userFetched.FirstName);
+                    Assert.AreEqual(userToAdd.LastName, userFetched.LastName);
+                }
             }
         }
 
@@ -86,5 +115,31 @@ namespace SecretSanta.Domain.Tests.Services
             user.Gifts = new List<Gift> {gift};
             return user;
         }
+        
+        
+        private static List<User> CreateFiveUsers()
+        {
+            return new List<User>
+            {
+                new User {FirstName = "Casey", LastName = "White"},
+                new User {FirstName = "Kenny", LastName = "White"},
+                new User {FirstName = "Mark", LastName = "Michaelis"},
+                new User {FirstName = "Kevin", LastName = "Bost"},
+                new User {FirstName = "Michael", LastName = "Stokesbary"}
+            };
+        }
+        
+        private static ILoggerFactory GetLoggerFactory()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder =>
+            {
+                builder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name,
+                        LogLevel.Information);
+            });
+            return serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
+        }
+
     }
 }

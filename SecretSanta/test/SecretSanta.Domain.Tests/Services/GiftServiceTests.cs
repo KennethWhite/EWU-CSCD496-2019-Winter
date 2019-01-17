@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,8 +37,8 @@ namespace SecretSanta.Domain.Tests.Services
         {
             SqliteConnection.Close();
         }
-        
-        ILoggerFactory GetLoggerFactory()
+
+        private static ILoggerFactory GetLoggerFactory()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
             serviceCollection.AddLogging(builder =>
@@ -48,8 +47,7 @@ namespace SecretSanta.Domain.Tests.Services
                     .AddFilter(DbLoggerCategory.Database.Command.Name,
                         LogLevel.Information);
             });
-            return serviceCollection.BuildServiceProvider().
-                GetService<ILoggerFactory>();
+            return serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
         }
 
         [TestMethod]
@@ -63,7 +61,7 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreNotEqual(0, giftFromDb.Id);
             }
         }
-        
+
         [TestMethod]
         public void FindGift_CreatedGiftIsRetrievedFromDatabase()
         {
@@ -71,7 +69,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new GiftService(context);
                 var myGift = CreateGift();
-                var persistedGift = service.AddOrUpdateGift(myGift);
+                service.AddOrUpdateGift(myGift);
             }
 
             using (var context = new ApplicationDbContext(Options))
@@ -81,7 +79,7 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreEqual(1, fetchedGift.Id);
             }
         }
-        
+
         private static Gift CreateGift()
         {
             var user = new User
@@ -95,11 +93,11 @@ namespace SecretSanta.Domain.Tests.Services
                 Title = "The Pragmatic Programmer",
                 Description = "Book by Andrew Hunt and David Thomas",
                 OrderOfImportance = 1,
-                URL = "https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X/ref=sr_1_1?ie=UTF8&qid=1547613186&sr=8-1&keywords=the+pragmatic+programmer",
+                URL =
+                    "https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X/ref=sr_1_1?ie=UTF8&qid=1547613186&sr=8-1&keywords=the+pragmatic+programmer",
                 User = user
             };
 
-            user.Gifts = new List<Gift> {gift};
             return gift;
         }
     }

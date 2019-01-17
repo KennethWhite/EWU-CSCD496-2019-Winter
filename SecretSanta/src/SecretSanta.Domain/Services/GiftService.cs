@@ -28,7 +28,7 @@ namespace SecretSanta.Domain.Services
         public Gift Find(int id)
         {
             return DbContext.Gifts.Include(gift => gift.User)
-                .SingleOrDefault();
+                .SingleOrDefault(gift => gift.Id == id);
         }
 
         public List<Gift> FetchAll()
