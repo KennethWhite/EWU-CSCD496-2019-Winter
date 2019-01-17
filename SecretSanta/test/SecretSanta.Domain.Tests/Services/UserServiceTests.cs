@@ -68,10 +68,31 @@ namespace SecretSanta.Domain.Tests.Services
         }
 
         [TestMethod]
+        public void FindUserID2_CreatedUserIsRetrievedFromDatabase()
+        {
+            var userList = CreateFiveUsers();
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                service.AddOrUpdateUser(userList[0]);
+                service.AddOrUpdateUser(userList[1]);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new UserService(context);
+                var fetchedUser = service.Find(2);
+                Assert.AreEqual(2, fetchedUser.Id);
+                Assert.AreEqual(userList[1].FirstName, fetchedUser.FirstName);
+                Assert.AreEqual(userList[1].LastName, fetchedUser.LastName);
+            }
+        }
+
+        [TestMethod]
         public void UpdateUser_UserIsUpdatedInTheDatabase()
         {
             var myUser = CreateUser();
-            
+
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new UserService(context);
@@ -80,13 +101,13 @@ namespace SecretSanta.Domain.Tests.Services
 
             myUser.FirstName = "Steve";
             myUser.LastName = "Irwin";
-            
+
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new UserService(context);
                 service.AddOrUpdateUser(myUser);
             }
-            
+
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new UserService(context);
@@ -143,20 +164,20 @@ namespace SecretSanta.Domain.Tests.Services
             user.Gifts = new List<Gift> {gift};
             return user;
         }
-        
-        
+
+
         private static List<User> CreateFiveUsers()
         {
             return new List<User>
             {
-                new User {FirstName = "Casey", LastName = "White"},
-                new User {FirstName = "Kenny", LastName = "White"},
+                new User {FirstName = "Bob", LastName = "Ross"},
+                new User {FirstName = "Steve", LastName = "Irwin"},
                 new User {FirstName = "Mark", LastName = "Michaelis"},
                 new User {FirstName = "Kevin", LastName = "Bost"},
                 new User {FirstName = "Michael", LastName = "Stokesbary"}
             };
         }
-        
+
         private static ILoggerFactory GetLoggerFactory()
         {
             IServiceCollection serviceCollection = new ServiceCollection();
@@ -168,6 +189,5 @@ namespace SecretSanta.Domain.Tests.Services
             });
             return serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
         }
-
     }
 }

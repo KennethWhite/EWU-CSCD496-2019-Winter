@@ -25,6 +25,13 @@ namespace SecretSanta.Domain.Services
             return gift;
         }
         
+        public ICollection<Gift> AddGifts(ICollection<Gift> gifts)
+        {
+            DbContext.AddRange(gifts);
+            DbContext.SaveChanges();
+            return gifts;
+        }
+        
         public Gift Find(int id)
         {
             return DbContext.Gifts.Include(gift => gift.User)
