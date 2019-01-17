@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SecretSanta.Domain.Models
 {
@@ -7,8 +8,9 @@ namespace SecretSanta.Domain.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        private List<Gift> Wishlist { get; set; }
-        public List<Group> Groups { get; set; }
         public List<Gift> Gifts { get; set; }
+        [NotMapped]
+        public List<Group> Groups { get; set; }
+        private List<Gift> Wishlist { get; set; }
     }
 }
