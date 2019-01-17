@@ -74,20 +74,15 @@ namespace SecretSanta.Domain.Tests.Services
             var giftList = CreateFiveGifts();
             using (var context = new ApplicationDbContext(Options))
             {
-                var service = new GiftService(context);
-                service.AddOrUpdateGift(giftList[0]);
-                service.AddOrUpdateGift(giftList[1]);
+                new GiftService(context).AddGifts(giftList);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
-                var service = new GiftService(context);
-                var fetchedGift = service.Find(2);
+                var fetchedGift = new GiftService(context).Find(2);
                 Assert.AreEqual(2, fetchedGift.Id);
                 Assert.AreEqual(giftList[1].Title, fetchedGift.Title);
                 Assert.AreEqual(giftList[1].Description, fetchedGift.Description);
-                Assert.AreEqual(giftList[1].OrderOfImportance, fetchedGift.OrderOfImportance);
-                Assert.AreEqual(giftList[1].URL, fetchedGift.URL);
             }
         }
 
@@ -95,11 +90,9 @@ namespace SecretSanta.Domain.Tests.Services
         public void UpdateGift_GiftIsUpdatedInTheDatabase()
         {
             var myGift = CreateGift();
-
             using (var context = new ApplicationDbContext(Options))
             {
-                var service = new GiftService(context);
-                service.AddOrUpdateGift(myGift);
+                new GiftService(context).AddOrUpdateGift(myGift);
             }
 
             myGift.Title = "New Item";
@@ -107,14 +100,12 @@ namespace SecretSanta.Domain.Tests.Services
 
             using (var context = new ApplicationDbContext(Options))
             {
-                var service = new GiftService(context);
-                service.AddOrUpdateGift(myGift);
+                new GiftService(context).AddOrUpdateGift(myGift);
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
-                var service = new GiftService(context);
-                var fetchedGift = service.Find(1);
+                var fetchedGift = new GiftService(context).Find(1);
                 Assert.AreEqual(1, fetchedGift.Id);
                 Assert.AreEqual("New Item", fetchedGift.Title);
                 Assert.AreEqual("A super cool gift", fetchedGift.Description);
@@ -138,10 +129,11 @@ namespace SecretSanta.Domain.Tests.Services
                 {
                     var fetchedUser = new UserService(context).Find(user.Id);
                     Assert.AreEqual(initialCount - numOfGiftsRemoved, fetchedUser.Gifts.Count);
+                    Assert.AreEqual(initialGifts[numOfGiftsRemoved].Id, fetchedUser.Gifts[0].Id);
                     Assert.AreEqual(initialGifts[numOfGiftsRemoved].Title, fetchedUser.Gifts[0].Title);
                     Assert.AreEqual(initialGifts[numOfGiftsRemoved].Description, fetchedUser.Gifts[0].Description);
                 }
-                
+
                 using (var context = new ApplicationDbContext(Options))
                 {
                     new GiftService(context).RemoveGift(user.Gifts[0]);
@@ -153,20 +145,18 @@ namespace SecretSanta.Domain.Tests.Services
         [TestMethod]
         public void FetchGifts_CreatedGiftsAreRetrievedFromDatabase()
         {
-            var giftsToAdd = CreateFiveGifts();
             using (var context = new ApplicationDbContext(Options))
             {
-                var service = new GiftService(context);
-                service.AddGifts(giftsToAdd);
+                new GiftService(context).AddGifts(CreateFiveGifts());
             }
 
             using (var context = new ApplicationDbContext(Options))
             {
-                var service = new GiftService(context);
-                var fetchedGifts = service.FetchAll();
+                var initialGifts = CreateFiveGifts();
+                var fetchedGifts = new GiftService(context).FetchAll();
                 for (var i = 0; i < fetchedGifts.Count; i++)
                 {
-                    var giftToAdd = giftsToAdd[i];
+                    var giftToAdd = initialGifts[i];
                     var giftFetched = fetchedGifts[i];
                     Assert.AreEqual(giftToAdd.Id, giftFetched.Id);
                     Assert.AreEqual(giftToAdd.Title, giftFetched.Title);
@@ -183,44 +173,21 @@ namespace SecretSanta.Domain.Tests.Services
                 OrderOfImportance = 1,
                 URL =
                     "https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X/ref=sr_1_1?ie=UTF8&qid=1547613186&sr=8-1&keywords=the+pragmatic+programmer",
-                User = new User
-                {
-                    FirstName = "Bob",
-                    LastName = "Ross"
-                }
             };
         }
 
         private static List<Gift> CreateFiveGifts()
         {
-            return new List<Gift>
+            var gifts = new List<Gift>();
+            for (var i = 1; i < 6; i++)
             {
-                new Gift
+                gifts.Add(new Gift
                 {
-                    Title = "Item 1", Description = "Item 1 description", OrderOfImportance = 1,
-                    URL = "https://www.item1.com"
-                },
-                new Gift
-                {
-                    Title = "Item 2", Description = "Item 2 description", OrderOfImportance = 2,
-                    URL = "https://www.item2.com"
-                },
-                new Gift
-                {
-                    Title = "Item 3", Description = "Item 3 description", OrderOfImportance = 3,
-                    URL = "https://www.item3.com"
-                },
-                new Gift
-                {
-                    Title = "Item 4", Description = "Item 4 description", OrderOfImportance = 4,
-                    URL = "https://www.item4.com"
-                },
-                new Gift
-                {
-                    Title = "Item 5", Description = "Item 5 description", OrderOfImportance = 5,
-                    URL = "https://www.item5.com"
-                }
-            };
+                    Id = i, Title = "Item " + i, Description = $"Item {i} description",
+                    OrderOfImportance = i, URL = $"https://www.item{i}.com"
+                });
+            }
+            return gifts;
         }
 
         private static ILoggerFactory GetLoggerFactory()

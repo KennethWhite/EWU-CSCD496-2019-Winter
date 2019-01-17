@@ -133,18 +133,6 @@ namespace SecretSanta.Domain.Tests.Services
             }
         }
 
-        private static ILoggerFactory GetLoggerFactory()
-        {
-            IServiceCollection serviceCollection = new ServiceCollection();
-            serviceCollection.AddLogging(builder =>
-            {
-                builder.AddConsole()
-                    .AddFilter(DbLoggerCategory.Database.Command.Name,
-                        LogLevel.Information);
-            });
-            return serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
-        }
-
         private static Pairing CreatePairing()
         {
             return new Pairing
@@ -174,6 +162,18 @@ namespace SecretSanta.Domain.Tests.Services
                     Santa = new User {FirstName = "Kenny", LastName = "White"}
                 }
             };
+        }
+        
+        private static ILoggerFactory GetLoggerFactory()
+        {
+            IServiceCollection serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging(builder =>
+            {
+                builder.AddConsole()
+                    .AddFilter(DbLoggerCategory.Database.Command.Name,
+                        LogLevel.Information);
+            });
+            return serviceCollection.BuildServiceProvider().GetService<ILoggerFactory>();
         }
     }
 }
