@@ -8,9 +8,8 @@ namespace SecretSanta.Domain.Models
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public List<Gift> Gifts { get; set; }
+        public List<Gift> Wishlist { get; set; }
         [NotMapped]
         public List<Group> Groups { get; set; }
-        public List<Gift> Wishlist { get; set; }
     }
 }

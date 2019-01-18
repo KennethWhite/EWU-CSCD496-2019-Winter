@@ -115,7 +115,7 @@ namespace SecretSanta.Domain.Tests.Services
         [TestMethod]
         public void RemoveGift_GiftIsRemovedFromUser()
         {
-            var user = new User {FirstName = "Steve", LastName = "Irwin", Gifts = CreateFiveGifts()};
+            var user = new User {FirstName = "Steve", LastName = "Irwin", Wishlist = CreateFiveGifts()};
             using (var context = new ApplicationDbContext(Options))
             {
                 new UserService(context).AddOrUpdateUser(user);
@@ -123,20 +123,20 @@ namespace SecretSanta.Domain.Tests.Services
 
             var initialGifts = CreateFiveGifts();
             int initialCount = initialGifts.Count, numOfGiftsRemoved = 0;
-            while (user.Gifts.Count > 0)
+            while (user.Wishlist.Count > 0)
             {
                 using (var context = new ApplicationDbContext(Options))
                 {
                     var fetchedUser = new UserService(context).Find(user.Id);
-                    Assert.AreEqual(initialCount - numOfGiftsRemoved, fetchedUser.Gifts.Count);
-                    Assert.AreEqual(initialGifts[numOfGiftsRemoved].Id, fetchedUser.Gifts[0].Id);
-                    Assert.AreEqual(initialGifts[numOfGiftsRemoved].Title, fetchedUser.Gifts[0].Title);
-                    Assert.AreEqual(initialGifts[numOfGiftsRemoved].Description, fetchedUser.Gifts[0].Description);
+                    Assert.AreEqual(initialCount - numOfGiftsRemoved, fetchedUser.Wishlist.Count);
+                    Assert.AreEqual(initialGifts[numOfGiftsRemoved].Id, fetchedUser.Wishlist[0].Id);
+                    Assert.AreEqual(initialGifts[numOfGiftsRemoved].Title, fetchedUser.Wishlist[0].Title);
+                    Assert.AreEqual(initialGifts[numOfGiftsRemoved].Description, fetchedUser.Wishlist[0].Description);
                 }
 
                 using (var context = new ApplicationDbContext(Options))
                 {
-                    new GiftService(context).RemoveGift(user.Gifts[0]);
+                    new GiftService(context).RemoveGift(user.Wishlist[0]);
                     numOfGiftsRemoved++;
                 }
             }

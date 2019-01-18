@@ -87,7 +87,7 @@ namespace SecretSanta.Domain.Tests.Services
             }
         }
 
-        
+
 
         [TestMethod]
         public void UpdateMessage_MessageIsUpdatedInTheDatabase()
@@ -115,35 +115,28 @@ namespace SecretSanta.Domain.Tests.Services
             }
         }
 
-        //[TestMethod]
-        //public void RemoveMessage_MessageIsRemovedFromDatabase()
-        //{
-        //    var message = CreateMessage();
-        //    using (var context = new ApplicationDbContext(Options))
-        //    {
-        //        new UserService(context).AddOrUpdateUser(user);
-        //    }
+        [TestMethod]
+        public void RemoveMessage_MessageIsRemovedFromDatabase()
+        {
+            var messages = CreateNMessages(5);
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var messageFromDb = new MessageService(context).AddMessages(messages);
+            }
 
-        //    var initialGifts = CreateFiveGifts();
-        //    int initialCount = initialGifts.Count, numOfGiftsRemoved = 0;
-        //    while (user.Gifts.Count > 0)
-        //    {
-        //        using (var context = new ApplicationDbContext(Options))
-        //        {
-        //            var fetchedUser = new UserService(context).Find(user.Id);
-        //            Assert.AreEqual(initialCount - numOfGiftsRemoved, fetchedUser.Gifts.Count);
-        //            Assert.AreEqual(initialGifts[numOfGiftsRemoved].Id, fetchedUser.Gifts[0].Id);
-        //            Assert.AreEqual(initialGifts[numOfGiftsRemoved].Title, fetchedUser.Gifts[0].Title);
-        //            Assert.AreEqual(initialGifts[numOfGiftsRemoved].Description, fetchedUser.Gifts[0].Description);
-        //        }
+            int numberRemoved = 0;
+            foreach (Message m in messages)
+            {
+                using (var context = new ApplicationDbContext(Options))
+                {
+                    new MessageService(context).RemoveMessage(m);
+                    numberRemoved++;
+                    Assert.AreEqual<int>(messages.Count - numberRemoved, new MessageService(context).FetchAll().Count);
+                }
 
-        //        using (var context = new ApplicationDbContext(Options))
-        //        {
-        //            new GiftService(context).RemoveGift(user.Gifts[0]);
-        //            numOfGiftsRemoved++;
-        //        }
-        //    }
-        //}
+            }
+
+        }
 
         [TestMethod]
         public void FetchMessages_CreatedMessagesAreRetrievedFromDatabase()
@@ -159,7 +152,7 @@ namespace SecretSanta.Domain.Tests.Services
                 var fetchedMessages = new MessageService(context).FetchAll();
                 for (var i = 0; i < fetchedMessages.Count; i++)
                 {
-                    var messageToAdd = fetchedMessages[i];
+                    var messageToAdd = initialMessages[i];
                     var messageFetched = fetchedMessages[i];
                     Assert.AreEqual(messageToAdd.Pairing.Santa.FirstName, messageFetched.Pairing.Santa.FirstName);
                     Assert.AreEqual(messageToAdd.Pairing.Recipient.FirstName, messageFetched.Pairing.Recipient.FirstName);

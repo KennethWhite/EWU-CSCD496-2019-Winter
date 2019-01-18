@@ -36,7 +36,7 @@ namespace SecretSanta.Domain.Services
 
         public User Find(int id)
         {
-            return DbContext.Users.Include(user => user.Gifts)
+            return DbContext.Users.Include(user => user.Wishlist)
                 .SingleOrDefault(user => user.Id == id);
         }
 

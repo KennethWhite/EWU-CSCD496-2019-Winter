@@ -161,7 +161,7 @@ namespace SecretSanta.Domain.Tests.Services
                 User = user
             };
 
-            user.Gifts = new List<Gift> {gift};
+            user.Wishlist = new List<Gift> {gift};
             return user;
         }
 

@@ -27,7 +27,7 @@ namespace SecretSanta.Domain.Services
 
         public void RemoveMessage(Message message)
         {
-            DbContext.Messages.Remove(message);    
+            DbContext.Messages.Remove(message);
             DbContext.SaveChanges();
         }
 
@@ -47,7 +47,12 @@ namespace SecretSanta.Domain.Services
 
         public List<Message> FetchAll()
         {
-            var messageTask = DbContext.Messages.ToListAsync();
+            var messageTask = DbContext.Messages
+                .Include(message => message.Pairing)
+                    .ThenInclude(pairing => pairing.Recipient)
+                .Include(message => message.Pairing)
+                    .ThenInclude(pairing => pairing.Santa)
+                .ToListAsync();
             messageTask.Wait();
             return messageTask.Result;
         }
