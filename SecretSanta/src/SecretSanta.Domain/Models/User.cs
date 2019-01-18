@@ -11,6 +11,6 @@ namespace SecretSanta.Domain.Models
         public List<Gift> Gifts { get; set; }
         [NotMapped]
         public List<Group> Groups { get; set; }
-        private List<Gift> Wishlist { get; set; }
+        public List<Gift> Wishlist { get; set; }
     }
 }

@@ -45,8 +45,8 @@ namespace SecretSanta.Domain.Tests.Services
             using (var dbContext = new ApplicationDbContext(Options))
             {
                 var service = new UserService(dbContext);
-                var userFromDb = service.AddOrUpdateUser(CreateUser());
-                Assert.AreNotEqual(0, userFromDb.Id);
+                var userAddedToDb = service.AddOrUpdateUser(CreateUser());
+                Assert.AreNotEqual(0, userAddedToDb.Id);
             }
         }
 
@@ -62,8 +62,8 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new UserService(context);
-                var fetchedUser = service.Find(1);
-                Assert.AreEqual(1, fetchedUser.Id);
+                var foundUser = service.Find(1);
+                Assert.AreEqual(1, foundUser.Id);
             }
         }
 
@@ -81,10 +81,10 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new UserService(context);
-                var fetchedUser = service.Find(2);
-                Assert.AreEqual(2, fetchedUser.Id);
-                Assert.AreEqual(userList[1].FirstName, fetchedUser.FirstName);
-                Assert.AreEqual(userList[1].LastName, fetchedUser.LastName);
+                var foundUser = service.Find(2);
+                Assert.AreEqual(2, foundUser.Id);
+                Assert.AreEqual(userList[1].FirstName, foundUser.FirstName);
+                Assert.AreEqual(userList[1].LastName, foundUser.LastName);
             }
         }
 
@@ -111,10 +111,10 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new UserService(context);
-                var fetchedUser = service.Find(1);
-                Assert.AreEqual(1, fetchedUser.Id);
-                Assert.AreEqual("Steve", fetchedUser.FirstName);
-                Assert.AreEqual("Irwin", fetchedUser.LastName);
+                var updatedUser = service.Find(1);
+                Assert.AreEqual(1, updatedUser.Id);
+                Assert.AreEqual("Steve", updatedUser.FirstName);
+                Assert.AreEqual("Irwin", updatedUser.LastName);
             }
         }
 
