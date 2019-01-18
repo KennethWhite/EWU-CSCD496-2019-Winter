@@ -9,6 +9,7 @@ using SecretSanta.Domain.Services;
 
 namespace SecretSanta.Domain.Tests.Services
 {
+
     [TestClass]
     public class GiftServiceTests
     {
