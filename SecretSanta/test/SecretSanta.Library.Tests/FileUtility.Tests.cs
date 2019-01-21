@@ -27,5 +27,15 @@ namespace SecretSanta.Library.Tests
             FileStream fout = FileUtility.OpenFile("NoFile.txt");
             Assert.Fail();
         }
+
+        [TestMethod]
+        [DataRow("")]
+        [DataRow("       ")]
+        [DataRow(null)]
+        [ExpectedException(typeof(ArgumentException))]
+        public void OpenFile_EmptyString_ThrowsArgumentException(string path)
+        {
+            FileUtility.OpenFile(path);
+        }
     }
 }
