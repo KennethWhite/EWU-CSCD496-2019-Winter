@@ -8,14 +8,11 @@ namespace SecretSanta.Library.Tests
     [TestClass]
     public class FileUtilityTests
     {
-        private string ValidFilePath { get; set; } =
-            Path.Combine(AppDomain.CurrentDomain.BaseDirectory, 
-                @"..\..\..\..\..\test\TestData\ValidFile.txt");
 
         [TestMethod]
         public void OpenFile_ValidFileName_NotNull()
         {
-            FileStream fout = FileUtility.OpenFile(ValidFilePath);
+            FileStream fout = FileUtility.OpenFile("ValidFile.txt");
             Assert.IsNotNull(fout);
             fout.Close();
         }
