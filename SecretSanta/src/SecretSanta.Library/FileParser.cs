@@ -30,12 +30,14 @@ namespace SecretSanta.Library
                 throw new InvalidDataException($"Header: \"{line}\" is an improper format");
 
             var swapNames = line.Contains(',');
-            var names = line.Split();
-            if(names.Length != 3)
-                throw new InvalidDataException($"\"Header: {line}\" does not contain a proper user name");
-            
-            return swapNames ? new User {FirstName = names[2], LastName = names[1].Remove(names[1].Length-1)} : 
-                new User {FirstName = names[1], LastName = names[2]};
+            var names = line.Split().Skip(1).ToArray();
+            if(names.Length != 2)
+                throw new InvalidDataException($"Header: \"{line}\" does not contain a proper user name");
+
+            var firstname = swapNames ? names[1] : names[0];
+            var lastname = swapNames ? names[0].Remove(names[0].Length - 1) : names[1];
+
+            return new User {FirstName = firstname, LastName = lastname};
         }
     }
 }
