@@ -8,9 +8,30 @@ namespace SecretSanta.Library.Tests
     {
         [TestMethod]
         [ExpectedException(typeof(InvalidDataException))]
-        public void ParseFile_InvalidHeader_Data()
+        public void ParseFile_InvalidHeaderDeclaration_ThrowsDataException()
         {
             var user = FileParser.ParseWishlistFile("invalidHeader.txt");
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(InvalidDataException))]
+        public void ParseFile_InvalidHeaderTooManyNames_ThrowsDataException()
+        {
+            var user = FileParser.ParseWishlistFile("InvalidHeaderTooManyNames.txt");
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(InvalidDataException))]
+        public void ParseFile_InvalidHeaderTooManyNamesLineFive_ThrowsDataException()
+        {
+            var user = FileParser.ParseWishlistFile("InvalidHeaderTooManyNamesLine5.txt");
+        }
+        
+        [TestMethod]
+        [ExpectedException(typeof(InvalidDataException))]
+        public void ParseFile_InvalidHeaderNoHeader_ThrowsDataException()
+        {
+            var user = FileParser.ParseWishlistFile("EmptyFile.txt");
         }
 
         [TestMethod]

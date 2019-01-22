@@ -21,7 +21,10 @@ namespace SecretSanta.Library
         private static User ParseWishlistHeader(StreamReader fin)
         {
             string line;
-            while (string.IsNullOrWhiteSpace(line = fin.ReadLine()));
+            while (string.IsNullOrWhiteSpace(line = fin.ReadLine()))
+            {
+                if(fin.EndOfStream) throw new InvalidDataException("File does not contain a header");
+            }
             
             if(!line.Contains("Name"))
                 throw new InvalidDataException($"Header: \"{line}\" is an improper format");
