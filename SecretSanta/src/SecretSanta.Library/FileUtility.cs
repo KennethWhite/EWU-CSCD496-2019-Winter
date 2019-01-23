@@ -5,19 +5,14 @@ namespace SecretSanta.Library
 {
     public class FileUtility
     {
-        //private static string RelativePath { get; set; } =
-        //    Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-        //        @"..\..\..\..\..\test\TestData\");
-
+        //Could possibly try to detect whether the path is a full path or a partial
         public static FileStream OpenFile(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {
                 throw new ArgumentException($"Parameter fileName empty or null on call to OpenFile.", fileName);
             }
-            var fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-
-            return new FileStream(fullPath, FileMode.Open, FileAccess.Read);
+            return new FileStream(fileName, FileMode.Open, FileAccess.Read);
         }
     }
 }
