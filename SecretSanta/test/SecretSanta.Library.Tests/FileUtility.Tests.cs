@@ -9,10 +9,24 @@ namespace SecretSanta.Library.Tests
     public class FileUtilityTests
     {
 
+
+        [TestInitialize]
+        public void InizializeTestFile()
+        {
+            ValidFile = Path.GetTempFileName();
+        }
+
+        [TestCleanup]
+        public void CleanupTestFile()
+        {
+            File.Delete(Path.GetFullPath(ValidFile));
+        }
+        public string ValidFile { get; set; }
+
         [TestMethod]
         public void OpenFile_ValidFileName_NotNull()
         {
-            FileStream fout = FileUtility.OpenFile("ValidFile.txt");
+            FileStream fout = FileUtility.OpenFile(ValidFile);
             Assert.IsNotNull(fout);
             fout.Close();
         }
@@ -34,5 +48,7 @@ namespace SecretSanta.Library.Tests
         {
             FileUtility.OpenFile(path);
         }
+
+        
     }
 }
