@@ -11,8 +11,7 @@ namespace SecretSanta.Library
         public static User ParseWishlistFile(string wishlistFileName)
         {
             User user;
-            using (var fileStream = FileUtility.OpenFile(wishlistFileName))
-            using (var streamReader = new StreamReader(fileStream))
+            using (var streamReader = new StreamReader(FileUtility.OpenFile(wishlistFileName)))
             {
                 user = ParseWishlistHeader(streamReader);
                 user.Wishlist = ParseWishlistGifts(streamReader);

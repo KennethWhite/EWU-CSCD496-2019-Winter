@@ -29,7 +29,7 @@ namespace SecretSanta.Library.Tests
         [DataRow("")]
         public void ParseFile_InvalidHeaderDeclaration_ThrowsDataException(string header)
         {
-            var fileHandle = CreateTempFile_WriteDataToFile(new List<string>() {header});
+            var fileHandle = CreateTempFile_WriteDataToFile(new List<string> {header});
             var user = FileParser.ParseWishlistFile(fileHandle);
         }
         
@@ -37,7 +37,7 @@ namespace SecretSanta.Library.Tests
         [ExpectedException(typeof(InvalidDataException))]
         public void ParseFile_InvalidHeaderTooManyNamesLineFive_ThrowsDataException()
         {
-            var fileHandle = CreateTempFile_WriteDataToFile(new List<string>() { @"
+            var fileHandle = CreateTempFile_WriteDataToFile(new List<string> { @"
 
 
 
@@ -49,7 +49,7 @@ Name: Louis George Maurice Adolphe Roche Albert Abel Antonio" });
         [TestMethod]
         public void ParseWishlistFile_ValidHeaderLineOne_Success()
         {
-            var fileHandle = CreateTempFile_WriteDataToFile(new List<string>() { "Name: Issac Newton" });
+            var fileHandle = CreateTempFile_WriteDataToFile(new List<string> { "Name: Issac Newton" });
             var user = FileParser.ParseWishlistFile(fileHandle);
             Assert.AreEqual("Issac", user.FirstName);
             Assert.AreEqual("Newton", user.LastName);
@@ -58,7 +58,7 @@ Name: Louis George Maurice Adolphe Roche Albert Abel Antonio" });
         [TestMethod]
         public void ParseWishlistFile_ValidHeaderLineFive_Success()
         {
-            var fileHandle = CreateTempFile_WriteDataToFile(new List<string>() { @"
+            var fileHandle = CreateTempFile_WriteDataToFile(new List<string> { @"
 
 
 
@@ -82,7 +82,7 @@ Name: Nikola Tesla
         [TestMethod]
         public void ParseWishlistFile_ValidHeaderLineFiveReversedNames_Success()
         {
-            var fileHandle = CreateTempFile_WriteDataToFile(new List<string>() { @"
+            var fileHandle = CreateTempFile_WriteDataToFile(new List<string> { @"
 
 
 
