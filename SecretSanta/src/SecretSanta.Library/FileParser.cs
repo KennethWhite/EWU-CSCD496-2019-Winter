@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SecretSanta.Domain.Models;
@@ -13,6 +15,7 @@ namespace SecretSanta.Library
             using (var streamReader = new StreamReader(fileStream))
             {
                 user = ParseWishlistHeader(streamReader);
+                user.Wishlist = ParseWishlistGifts(streamReader);
             }
 
             return user;
@@ -39,5 +42,27 @@ namespace SecretSanta.Library
 
             return new User {FirstName = firstname, LastName = lastname};
         }
+
+        //Makes some assumptions about formatting for wishlist file after the header
+        private static List<Gift> ParseWishlistGifts(StreamReader streamReader)
+        {
+            List<Gift> gifts = new List<Gift>();
+            int order = 1;
+            while (!streamReader.EndOfStream)
+            {
+                string line = streamReader.ReadLine();
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    Gift g = new Gift();
+                    g.Title = line;
+                    g.Description = line;
+                    g.OrderOfImportance = order;
+                    gifts.Add(g);
+                    order++;
+                }
+            }
+            return gifts;
+        }
+
     }
 }

@@ -50,7 +50,6 @@ namespace SecretSanta.Library.Tests
         public void OpenFile_FileNotFound_ThrowsFNFException()
         {
             FileStream fout = FileUtility.OpenFile("NoFile.txt");
-            Assert.Fail();
         }
 
         [TestMethod]

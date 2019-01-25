@@ -5,7 +5,6 @@ namespace SecretSanta.Library
 {
     public class FileUtility
     {
-        //Could possibly try to detect whether the path is a full path or a partial
         public static FileStream OpenFile(string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))
