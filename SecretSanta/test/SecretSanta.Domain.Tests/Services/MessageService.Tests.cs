@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +46,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new MessageService(dbContext);
                 var messageFromDb = service.AddOrUpdateMessage(CreateMessage());
-                Assert.AreNotEqual(0, messageFromDb.Id);
+                Assert.AreNotEqual<int>(0, messageFromDb.Id);
             }
         }
 
@@ -65,7 +64,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new MessageService(context);
                 var messageFromDb = service.Find(1);
-                Assert.AreEqual(1, messageFromDb.Id);
+                Assert.AreEqual<int>(1, messageFromDb.Id);
             }
         }
 
@@ -81,9 +80,9 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 var messageFromDb = new MessageService(context).Find(2);
-                Assert.AreEqual(2, messageFromDb.Id);
-                Assert.AreEqual(messageList[1].Pairing.Santa.FirstName, messageFromDb.Pairing.Santa.FirstName);
-                Assert.AreEqual(messageList[1].Pairing.Recipient.FirstName, messageFromDb.Pairing.Recipient.FirstName);
+                Assert.AreEqual<int>(2, messageFromDb.Id);
+                Assert.AreEqual<string>(messageList[1].Pairing.Santa.FirstName, messageFromDb.Pairing.Santa.FirstName);
+                Assert.AreEqual<string>(messageList[1].Pairing.Recipient.FirstName, messageFromDb.Pairing.Recipient.FirstName);
             }
         }
 
@@ -109,9 +108,9 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 var messageFromDb = new MessageService(context).Find(1);
-                Assert.AreEqual(1, messageFromDb.Id);
-                Assert.AreEqual("Inigo", messageFromDb.Pairing.Recipient.FirstName);
-                Assert.AreEqual("Montoya", messageFromDb.Pairing.Recipient.LastName);
+                Assert.AreEqual<int>(1, messageFromDb.Id);
+                Assert.AreEqual<string>("Inigo", messageFromDb.Pairing.Recipient.FirstName);
+                Assert.AreEqual<string>("Montoya", messageFromDb.Pairing.Recipient.LastName);
             }
         }
 
@@ -124,8 +123,8 @@ namespace SecretSanta.Domain.Tests.Services
                 var messageFromDb = new MessageService(context).AddMessages(messages);
             }
 
-            int numberRemoved = 0;
-            foreach (Message m in messages)
+            var numberRemoved = 0;
+            foreach (var m in messages)
             {
                 using (var context = new ApplicationDbContext(Options))
                 {
@@ -154,8 +153,8 @@ namespace SecretSanta.Domain.Tests.Services
                 {
                     var messageToAdd = initialMessages[i];
                     var messageFetched = fetchedMessages[i];
-                    Assert.AreEqual(messageToAdd.Pairing.Santa.FirstName, messageFetched.Pairing.Santa.FirstName);
-                    Assert.AreEqual(messageToAdd.Pairing.Recipient.FirstName, messageFetched.Pairing.Recipient.FirstName);
+                    Assert.AreEqual<string>(messageToAdd.Pairing.Santa.FirstName, messageFetched.Pairing.Santa.FirstName);
+                    Assert.AreEqual<string>(messageToAdd.Pairing.Recipient.FirstName, messageFetched.Pairing.Recipient.FirstName);
                 }
             }
         }
@@ -166,16 +165,8 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 Pairing = new Pairing
                 {
-                    Santa = new User
-                    {
-                        FirstName = "Kris",
-                        LastName = "Kringle"
-                    },
-                    Recipient = new User
-                    {
-                        FirstName = "Dennis",
-                        LastName = "Menace"
-                    }
+                    Santa = new User {FirstName = "Kris", LastName = "Kringle"},
+                    Recipient = new User {FirstName = "Dennis", LastName = "Menace"}
                 }
             };
         }
@@ -189,16 +180,8 @@ namespace SecretSanta.Domain.Tests.Services
                 {
                     Pairing = new Pairing
                     {
-                        Santa = new User
-                        {
-                            FirstName = $"Kris the {i}th",
-                            LastName = "Kringle"
-                        },
-                        Recipient = new User
-                        {
-                            FirstName = $"Dennis the {i}th",
-                            LastName = "Menace"
-                        }
+                        Santa = new User {FirstName = $"Kris the {i}th", LastName = "Kringle"},
+                        Recipient = new User {FirstName = $"Dennis the {i}th", LastName = "Menace"}
                     }
                 });
             }

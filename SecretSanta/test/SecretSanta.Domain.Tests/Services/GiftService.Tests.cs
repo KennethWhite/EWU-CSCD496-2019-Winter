@@ -172,7 +172,7 @@ namespace SecretSanta.Domain.Tests.Services
                 Description = "Book by Andrew Hunt and David Thomas",
                 OrderOfImportance = 1,
                 URL =
-                    "https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X/ref=sr_1_1?ie=UTF8&qid=1547613186&sr=8-1&keywords=the+pragmatic+programmer",
+                    "https://www.amazon.com/Pragmatic-Programmer-Journeyman-Master/dp/020161622X/ref=sr_1_1?ie=UTF8&qid=1547613186&sr=8-1&keywords=the+pragmatic+programmer"
             };
         }
 

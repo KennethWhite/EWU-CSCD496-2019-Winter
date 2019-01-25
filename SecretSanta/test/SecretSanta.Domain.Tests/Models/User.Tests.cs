@@ -10,8 +10,8 @@ namespace SecretSanta.Domain.Tests.Models
         public void CreateUser()
         {
             var user = new User {FirstName = "Inigo", LastName = "Montoya"};
-            Assert.AreEqual("Inigo", user.FirstName);
-            Assert.AreEqual("Montoya", user.LastName);
+            Assert.AreEqual<string>("Inigo", user.FirstName);
+            Assert.AreEqual<string>("Montoya", user.LastName);
         }
     }
 }

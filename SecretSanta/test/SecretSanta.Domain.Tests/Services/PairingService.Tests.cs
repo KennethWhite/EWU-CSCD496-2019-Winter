@@ -52,9 +52,9 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new PairingService(context);
                 var fetchedPairing = service.Find(1);
-                Assert.AreEqual(1, fetchedPairing.Id);
-                Assert.AreEqual("Steve", fetchedPairing.Recipient.FirstName);
-                Assert.AreEqual("Kris", fetchedPairing.Santa.FirstName);
+                Assert.AreEqual<int>(1, fetchedPairing.Id);
+                Assert.AreEqual<string>("Steve", fetchedPairing.Recipient.FirstName);
+                Assert.AreEqual<string>("Kris", fetchedPairing.Santa.FirstName);
             }
         }
 
@@ -73,9 +73,9 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new PairingService(context);
                 var fetchedPairing = service.Find(2);
-                Assert.AreEqual(2, fetchedPairing.Id);
-                Assert.AreEqual(pairingList[1].Recipient.FirstName, fetchedPairing.Recipient.FirstName);
-                Assert.AreEqual(pairingList[1].Santa.FirstName, fetchedPairing.Santa.FirstName);
+                Assert.AreEqual<int>(2, fetchedPairing.Id);
+                Assert.AreEqual<string>(pairingList[1].Recipient.FirstName, fetchedPairing.Recipient.FirstName);
+                Assert.AreEqual<string>(pairingList[1].Santa.FirstName, fetchedPairing.Santa.FirstName);
             }
         }
 
@@ -102,9 +102,9 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new PairingService(context);
                 var fetchedPairing = service.Find(1);
-                Assert.AreEqual(1, fetchedPairing.Id);
-                Assert.AreEqual("New", fetchedPairing.Recipient.FirstName);
-                Assert.AreEqual("Recipient", fetchedPairing.Recipient.LastName);
+                Assert.AreEqual<int>(1, fetchedPairing.Id);
+                Assert.AreEqual<string>("New", fetchedPairing.Recipient.FirstName);
+                Assert.AreEqual<string>("Recipient", fetchedPairing.Recipient.LastName);
             }
         }
 
@@ -126,9 +126,9 @@ namespace SecretSanta.Domain.Tests.Services
                 {
                     var pairingToAdd = pairingsToAdd[i];
                     var pairingFetched = fetchedPairings[i];
-                    Assert.AreEqual(pairingToAdd.Id, pairingFetched.Id);
-                    Assert.AreEqual(pairingToAdd.Recipient.FirstName, pairingFetched.Recipient.FirstName);
-                    Assert.AreEqual(pairingToAdd.Santa.FirstName, pairingFetched.Santa.FirstName);
+                    Assert.AreEqual<int>(pairingToAdd.Id, pairingFetched.Id);
+                    Assert.AreEqual<string>(pairingToAdd.Recipient.FirstName, pairingFetched.Recipient.FirstName);
+                    Assert.AreEqual<string>(pairingToAdd.Santa.FirstName, pairingFetched.Santa.FirstName);
                 }
             }
         }

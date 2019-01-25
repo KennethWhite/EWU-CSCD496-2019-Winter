@@ -46,7 +46,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new UserService(dbContext);
                 var userAddedToDb = service.AddOrUpdateUser(CreateUser());
-                Assert.AreNotEqual(0, userAddedToDb.Id);
+                Assert.AreNotEqual<int>(0, userAddedToDb.Id);
             }
         }
 
@@ -63,7 +63,7 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new UserService(context);
                 var foundUser = service.Find(1);
-                Assert.AreEqual(1, foundUser.Id);
+                Assert.AreEqual<int>(1, foundUser.Id);
             }
         }
 
@@ -82,9 +82,9 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new UserService(context);
                 var foundUser = service.Find(2);
-                Assert.AreEqual(2, foundUser.Id);
-                Assert.AreEqual(userList[1].FirstName, foundUser.FirstName);
-                Assert.AreEqual(userList[1].LastName, foundUser.LastName);
+                Assert.AreEqual<int>(2, foundUser.Id);
+                Assert.AreEqual<string>(userList[1].FirstName, foundUser.FirstName);
+                Assert.AreEqual<string>(userList[1].LastName, foundUser.LastName);
             }
         }
 
@@ -112,9 +112,9 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new UserService(context);
                 var updatedUser = service.Find(1);
-                Assert.AreEqual(1, updatedUser.Id);
-                Assert.AreEqual("Steve", updatedUser.FirstName);
-                Assert.AreEqual("Irwin", updatedUser.LastName);
+                Assert.AreEqual<int>(1, updatedUser.Id);
+                Assert.AreEqual<string>("Steve", updatedUser.FirstName);
+                Assert.AreEqual<string>("Irwin", updatedUser.LastName);
             }
         }
 
@@ -136,9 +136,9 @@ namespace SecretSanta.Domain.Tests.Services
                 {
                     var userToAdd = usersToAdd[i];
                     var userFetched = fetchedUsers[i];
-                    Assert.AreEqual(userToAdd.Id, userFetched.Id);
-                    Assert.AreEqual(userToAdd.FirstName, userFetched.FirstName);
-                    Assert.AreEqual(userToAdd.LastName, userFetched.LastName);
+                    Assert.AreEqual<int>(userToAdd.Id, userFetched.Id);
+                    Assert.AreEqual<string>(userToAdd.FirstName, userFetched.FirstName);
+                    Assert.AreEqual<string>(userToAdd.LastName, userFetched.LastName);
                 }
             }
         }

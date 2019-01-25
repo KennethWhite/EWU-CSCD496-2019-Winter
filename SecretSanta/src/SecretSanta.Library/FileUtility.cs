@@ -9,7 +9,7 @@ namespace SecretSanta.Library
         {
             if (string.IsNullOrWhiteSpace(fileName))
             {
-                throw new ArgumentException($"Parameter fileName empty or null on call to OpenFile.", fileName);
+                throw new ArgumentException("Parameter fileName empty or null on call to OpenFile.", fileName);
             }
             return new FileStream(fileName, FileMode.Open, FileAccess.Read);
         }

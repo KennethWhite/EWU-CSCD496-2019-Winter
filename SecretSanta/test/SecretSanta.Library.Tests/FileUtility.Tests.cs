@@ -1,8 +1,7 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SecretSanta.Library;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace SecretSanta.Library.Tests
 {
@@ -12,16 +11,10 @@ namespace SecretSanta.Library.Tests
         private List<string> TempFiles { get; } = new List<string>();
 
         [TestInitialize]
-        public void InizializeTestFile()
+        public void InitializeTestFile()
         {
-            if (TempFiles.Count > 0)
-            {
-                foreach (string filePath in TempFiles)
-                {
-                    File.Delete(filePath);
-                }
-                TempFiles.Clear();
-            }
+            TempFiles.ForEach(File.Delete);
+            TempFiles.Clear();
             ValidFile = Path.GetTempFileName();
             TempFiles.Add(ValidFile);
         }
@@ -29,10 +22,7 @@ namespace SecretSanta.Library.Tests
         [TestCleanup]
         public void CleanupTestFile()
         {
-            foreach (string filePath in TempFiles)
-            {
-                File.Delete(filePath);
-            }
+            TempFiles.ForEach(File.Delete);
             TempFiles.Clear();
         }
         public string ValidFile { get; set; }
