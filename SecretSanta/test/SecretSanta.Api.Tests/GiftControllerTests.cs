@@ -55,7 +55,7 @@ namespace SecretSanta.Api.Tests
             var testService = new TestableGiftService{ToReturn =  new List<Gift>()};
             var controller = new GiftController(testService);
             var gift = CreateGiftWithId(1);
-            var result = controller.AddGiftForUser(1, gift);
+            var result = controller.AddGiftForUser(1, new DTO.Gift(gift));
             var resultGift = result.Value;
             Assert.AreEqual(1, testService.ToReturn.Count);
             Assert.AreEqual(gift.Id, resultGift.Id);
