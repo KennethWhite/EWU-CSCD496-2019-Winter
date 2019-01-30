@@ -26,6 +26,8 @@ namespace SecretSanta.Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddScoped<IGiftService, GiftService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGroupService, GroupService>();
 
             var connection = new SqliteConnection("DataSource=:memory:");
             connection.Open();
@@ -38,7 +40,6 @@ namespace SecretSanta.Api
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
-                c.CustomSchemaIds(x => x.FullName);
             });
         }
 

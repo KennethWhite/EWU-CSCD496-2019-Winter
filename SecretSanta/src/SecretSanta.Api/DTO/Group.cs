@@ -7,6 +7,11 @@ namespace SecretSanta.Api.DTO
         public int Id { get; set; }
         public string Name { get; set; }
 
+        public Group()
+        {
+            
+        }
+
         public Group(Domain.Models.Group group)
         {
             if (group == null) throw new ArgumentNullException(nameof(group));
