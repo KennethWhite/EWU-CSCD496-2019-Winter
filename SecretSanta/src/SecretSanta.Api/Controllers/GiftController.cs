@@ -24,9 +24,9 @@ namespace SecretSanta.Api.Controllers
         {
             if (userId <= 0) return NotFound();
             
-            List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
+            List<Gift> databaseGifts = _GiftService.GetGiftsForUser(userId);
 
-            return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
+            return databaseGifts.Select(x => new DTO.Gift(x)).ToList();
         }
         
         // Post api/Gift/5

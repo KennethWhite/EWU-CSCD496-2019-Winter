@@ -32,7 +32,7 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
-        public void GetGiftForUser_ReturnsUsersFromService()
+        public void GetGiftsForUser_ReturnsUsersFromService()
         {
             var gift = CreateGiftWithId(1);
             var testService = new TestableGiftService {UserGiftsToReturn = new List<Gift> {gift}};
