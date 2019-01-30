@@ -208,7 +208,7 @@ namespace SecretSanta.Api.Tests
             Assert.AreEqual(1, groups[0].Id);
         }
         
-        private static User CreateUserWithId(int id, List<GroupUser> groupUsers = null)
+        private static User CreateUserWithId(int id)
         {
             return new User
             {
@@ -218,7 +218,7 @@ namespace SecretSanta.Api.Tests
             };
         }
 
-        private static Group CreateGroupWithId(int id, List<GroupUser> groupUsers = null)
+        private static Group CreateGroupWithId(int id)
         {
             return new Group
             {
