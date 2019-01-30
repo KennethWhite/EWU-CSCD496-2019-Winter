@@ -30,7 +30,7 @@ namespace SecretSanta.Domain.Services
             return group;
         }
 
-        public Group RemoveGroup(Group group)
+        public Group RemoveGroup(Group group)//todo Test all GroupService methods below
         {
             if (group == null) throw new ArgumentNullException(nameof(group));
 

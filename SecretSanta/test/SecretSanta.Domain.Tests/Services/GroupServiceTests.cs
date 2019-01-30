@@ -7,7 +7,7 @@ using System.Linq;
 namespace SecretSanta.Domain.Tests.Services
 {
     [TestClass]
-    public class GroupServiceTests : DatabaseServiceTests
+    public class GroupServiceTests : DatabaseServiceTests    //todo Test additional GroupService methods
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]

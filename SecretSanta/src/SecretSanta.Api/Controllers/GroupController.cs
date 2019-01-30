@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
 using Microsoft.AspNetCore.Mvc;
-using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 
 namespace SecretSanta.Api.Controllers
@@ -74,7 +72,7 @@ namespace SecretSanta.Api.Controllers
         [HttpGet]
         public ActionResult<List<DTO.Group>> GetAllGroups()
         {
-            List<Group> databaseGroups = _GroupService.FetchAllGroups();
+            List<Domain.Models.Group> databaseGroups = _GroupService.FetchAllGroups();
 
             return databaseGroups.Select(x => new DTO.Group(x)).ToList();
         }
