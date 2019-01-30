@@ -22,7 +22,7 @@ namespace SecretSanta.Api.Tests
         public void GetGiftForUser_ReturnsUsersFromService()
         {
             var gift = CreateGiftWithId(1);
-            var testService = new TestableGiftService {ToReturn =  new List<Gift> {gift}};
+            var testService = new TestableGiftService {UserGiftsToReturn =  new List<Gift> {gift}};
             var controller = new GiftController(testService);
 
             ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(4);
@@ -50,16 +50,43 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
+        public void AddGiftForUser_RequiresGift()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+            var result = controller.AddGiftForUser(5, null);
+            Assert.IsTrue(result is BadRequestResult);
+            
+        }
+
+        [TestMethod]
         public void AddGiftForUser_ReturnAdditionIsTrue()
         {
-            var testService = new TestableGiftService{ToReturn =  new List<Gift>()};
+            var testService = new TestableGiftService{UserGiftsToReturn =  new List<Gift>()};
             var controller = new GiftController(testService);
             var gift = CreateGiftWithId(1);
             var result = controller.AddGiftForUser(1, new DTO.Gift(gift));
             var resultGift = result.Value;
-            Assert.AreEqual(1, testService.ToReturn.Count);
+            Assert.AreEqual(1, testService.UserGiftsToReturn.Count);
             Assert.AreEqual(gift.Id, resultGift.Id);
             Assert.AreEqual(gift.Title, resultGift.Title);
+        }
+
+        [TestMethod]
+        public void RemoveGiftForUser_GiftIsRemoved()
+        {
+            var testService = new TestableGiftService{UserGiftsToReturn =  new List<Gift>
+            {
+                CreateGiftWithId(1), CreateGiftWithId(2), CreateGiftWithId(3)
+            }};
+            var controller = new GiftController(testService);
+
+            var giftToRemove = testService.UserGiftsToReturn[1];
+            Assert.AreEqual<int>(3, testService.UserGiftsToReturn.Count);
+            testService.RemoveGift(giftToRemove);
+            Assert.AreEqual<int>(2, testService.UserGiftsToReturn.Count);
+            Assert.AreEqual<int>(1, testService.UserGiftsToReturn[0].Id);
+            Assert.AreEqual<int>(3, testService.UserGiftsToReturn[1].Id);
         }
 
         private Gift CreateGiftWithId(int id)

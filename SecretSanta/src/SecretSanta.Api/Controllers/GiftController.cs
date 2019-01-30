@@ -22,21 +22,32 @@ namespace SecretSanta.Api.Controllers
         [HttpGet("{userId}")]
         public ActionResult<List<DTO.Gift>> GetGiftForUser(int userId)
         {
-            if (userId <= 0)
-            {
-                return NotFound();
-            }
+            if (userId <= 0) return NotFound();
+            
             List<Gift> databaseUsers = _GiftService.GetGiftsForUser(userId);
 
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
         
         // Put api/Gift/5
-        [HttpPut("{userId}")]
+        [HttpPost("{userId}")]
         public ActionResult<DTO.Gift> AddGiftForUser(int userId, DTO.Gift gift)
         {
             if (userId <= 0) return NotFound();
+            if (gift == null) return BadRequest();
             return new DTO.Gift(_GiftService.AddGiftToUser(userId, DTO.Gift.ToDomain(gift)));
         }
+        
+        // Put api/Gift/5
+        [HttpPut("{userId}")]
+        public ActionResult RemoveGiftForUser(int userId, DTO.Gift gift)
+        {
+            if (userId <= 0) return NotFound();
+            if (gift == null) return BadRequest();
+            _GiftService.RemoveGift(DTO.Gift.ToDomain(gift));
+            return Ok();
+        }
+        
+        
     }
 }
