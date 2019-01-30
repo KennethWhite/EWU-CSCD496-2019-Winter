@@ -35,7 +35,7 @@ namespace SecretSanta.Api.Tests
         public void GetGiftsForUser_ReturnsUsersFromService()
         {
             var gift = CreateGiftWithId(1);
-            var testService = new TestableGiftService {UserGiftsToReturn = new List<Gift> {gift}};
+            var testService = new TestableGiftService {AllGifts = new List<Gift> {gift}};
             var controller = new GiftController(testService);
 
             ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(4);
@@ -81,12 +81,12 @@ namespace SecretSanta.Api.Tests
         [TestMethod]
         public void AddGiftForUser_ReturnAddition()
         {
-            var testService = new TestableGiftService {UserGiftsToReturn = new List<Gift>()};
+            var testService = new TestableGiftService {AllGifts = new List<Gift>()};
             var controller = new GiftController(testService);
             var gift = CreateGiftWithId(1);
             var result = controller.AddGiftForUser(1, new DTO.Gift(gift));
             var resultGift = result.Value;
-            Assert.AreEqual(1, testService.UserGiftsToReturn.Count);
+            Assert.AreEqual(1, testService.AllGifts.Count);
             Assert.AreEqual(resultGift.Id, testService.AddGiftsForUser_UserId);
             Assert.AreEqual(gift.Id, testService.AddGiftsForUser_UserId);
             Assert.AreEqual(gift.Id, resultGift.Id);
@@ -127,7 +127,7 @@ namespace SecretSanta.Api.Tests
         {
             var testService = new TestableGiftService
             {
-                UserGiftsToReturn = new List<Gift>
+                AllGifts = new List<Gift>
                 {
                     CreateGiftWithId(1), CreateGiftWithId(2), CreateGiftWithId(3)
                 }
@@ -139,7 +139,7 @@ namespace SecretSanta.Api.Tests
             updateGift.Description = "New Desc";
             var result = controller.UpdateGiftForUser(1, new DTO.Gift(updateGift));
             var resultGift = result.Value;
-            Assert.AreEqual(3, testService.UserGiftsToReturn.Count);
+            Assert.AreEqual(3, testService.AllGifts.Count);
             Assert.AreEqual(oldGift.Id, testService.UpdateGiftsForUser_GiftId);
             Assert.AreEqual(oldGift.Id, resultGift.Id);
             Assert.AreNotEqual(oldGift.Title, resultGift.Title);
@@ -163,18 +163,18 @@ namespace SecretSanta.Api.Tests
         {
             var testService = new TestableGiftService
             {
-                UserGiftsToReturn = new List<Gift>
+                AllGifts = new List<Gift>
                 {
                     CreateGiftWithId(1), CreateGiftWithId(2), CreateGiftWithId(3)
                 }
             };
             var controller = new GiftController(testService);
-            var giftToRemove = new DTO.Gift(testService.UserGiftsToReturn[1]);
-            Assert.AreEqual<int>(3, testService.UserGiftsToReturn.Count);
+            var giftToRemove = new DTO.Gift(testService.AllGifts[1]);
+            Assert.AreEqual<int>(3, testService.AllGifts.Count);
             controller.RemoveGift(giftToRemove);
-            Assert.AreEqual<int>(2, testService.UserGiftsToReturn.Count);
-            Assert.AreEqual<int>(1, testService.UserGiftsToReturn[0].Id);
-            Assert.AreEqual<int>(3, testService.UserGiftsToReturn[1].Id);
+            Assert.AreEqual<int>(2, testService.AllGifts.Count);
+            Assert.AreEqual<int>(1, testService.AllGifts[0].Id);
+            Assert.AreEqual<int>(3, testService.AllGifts[1].Id);
             Assert.AreEqual(giftToRemove.Id, testService.RemoveGifts_GiftId);
         }
 

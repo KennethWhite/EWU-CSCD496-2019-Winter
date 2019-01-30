@@ -48,7 +48,7 @@ namespace SecretSanta.Api.Controllers
         }
         
         // Put api/Gift/5
-        [HttpPut("{userId}")]
+        [HttpPut]
         public ActionResult RemoveGift(DTO.Gift gift)
         {
             if (gift == null) return BadRequest();

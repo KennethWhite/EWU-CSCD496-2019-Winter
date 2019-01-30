@@ -7,7 +7,7 @@ namespace SecretSanta.Api.Tests
 {
     public class TestableGiftService : IGiftService
     {
-        public List<Gift> UserGiftsToReturn { get; set; }
+        public List<Gift> AllGifts { get; set; }
         public int GetGiftsForUser_UserId { get; set; }
         public int AddGiftsForUser_UserId { get; set; }
         public int UpdateGiftsForUser_GiftId { get; set; }
@@ -16,31 +16,31 @@ namespace SecretSanta.Api.Tests
         public List<Gift> GetGiftsForUser(int userId)
         {
             GetGiftsForUser_UserId = userId;
-            return UserGiftsToReturn;
+            return AllGifts;
         }
 
         public Gift AddGiftToUser(int userId, Gift gift)
         {
             AddGiftsForUser_UserId = userId;
-            UserGiftsToReturn.Add(gift);
+            AllGifts.Add(gift);
             return gift;
         }
 
         public Gift UpdateGiftForUser(int userId, Gift gift)
         {
             UpdateGiftsForUser_GiftId = gift.Id;
-            var oldGift = UserGiftsToReturn.Single(g => g.Id == gift.Id);
-            oldGift.Title = gift.Title;
-            oldGift.UserId = gift.UserId;
-            oldGift.Url = gift.Url;
-            oldGift.OrderOfImportance = gift.OrderOfImportance;
-            return oldGift;
+            var giftToUpdate = AllGifts.Single(g => g.Id == gift.Id);
+            giftToUpdate.Title = gift.Title;
+            giftToUpdate.UserId = gift.UserId;
+            giftToUpdate.Url = gift.Url;
+            giftToUpdate.OrderOfImportance = gift.OrderOfImportance;
+            return gift;
         }
 
         public void RemoveGift(Gift gift)
         {
             RemoveGifts_GiftId = gift.Id;
-            UserGiftsToReturn.Remove(UserGiftsToReturn.Single(g => g.Id == gift.Id));
+            AllGifts.Remove(AllGifts.Single(g => g.Id == gift.Id));
         }
  
     }
