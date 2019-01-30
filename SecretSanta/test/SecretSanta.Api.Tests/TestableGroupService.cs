@@ -2,38 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SecretSanta.Domain.Models;
+using SecretSanta.Domain.Services;
 
-namespace SecretSanta.Domain.Services
+namespace SecretSanta.Api.Tests
 {
-    public class GroupService : IGroupService
+    public class TestableGroupService : IGroupService
     {
-        private ApplicationDbContext DbContext { get; }
-
-        public GroupService(ApplicationDbContext dbContext)
-        {
-            DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-        }
-
+        public List<Group> AllGroups { get; set; }
+        public int LastGroupModified;
+        
         public Group AddGroup(Group group)
         {
-            DbContext.Groups.Add(group);
-            DbContext.SaveChanges();
+            LastGroupModified = group.Id;
+            AllGroups.Add(group);
             return group;
         }
 
         public Group UpdateGroup(Group group)
         {
-            DbContext.Groups.Update(group);
-            DbContext.SaveChanges();
+            LastGroupModified = group.Id;
+            var groupToUpdate = AllGroups.Single(g => g.Id == group.Id);
+            groupToUpdate.Name = group.Name;
+            groupToUpdate.GroupUsers = group.GroupUsers;
             return group;
         }
 
         public void RemoveGroup(Group group)
         {
-            if (group == null) throw new ArgumentNullException(nameof(group));
-
-            DbContext.Groups.Remove(group);
-            DbContext.SaveChanges();
+            LastGroupModified = group.Id;
+            AllGroups.Remove(AllGroups.Single(g => g.Id == group.Id));
         }
 
         public Group AddUserToGroup(int userId, Group group)
@@ -53,7 +50,7 @@ namespace SecretSanta.Domain.Services
 
         public List<Group> FetchAllGroups()
         {
-            return DbContext.Groups.ToList();
+            return AllGroups;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace SecretSanta.Api.DTO
                 
         }
 
-        public Gift(SecretSanta.Domain.Models.Gift gift)
+        public Gift(Domain.Models.Gift gift)
         {
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
