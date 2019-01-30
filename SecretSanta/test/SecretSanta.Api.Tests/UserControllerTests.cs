@@ -33,13 +33,12 @@ namespace SecretSanta.Api.Tests
         {
             var user = CreateUser(1, "Bob", "Ross");
             ActionResult<DTO.User> result = UserController.CreateUser(new DTO.User(user));
-            Assert.IsTrue(result.Result is CreatedResult);
             Assert.AreEqual(1, TestService.LastModifiedUser.Id);
 
             DTO.User resultUser = result.Value;
-            Assert.AreEqual<int>(user.Id, TestService.LastModifiedUser.Id);
-            Assert.AreEqual<string>(user.FirstName, TestService.LastModifiedUser.FirstName);
-            Assert.AreEqual<string>(user.LastName, TestService.LastModifiedUser.LastName);
+            Assert.AreEqual<int>(1, resultUser.Id);
+            Assert.AreEqual<string>(user.FirstName, resultUser.FirstName);
+            Assert.AreEqual<string>(user.LastName, resultUser.LastName);
         }
 
         [TestMethod]

@@ -34,7 +34,7 @@ namespace SecretSanta.Api.Controllers
             _UserService.AddUser(domUser);
             DTO.User createdUser = new DTO.User(domUser);
 
-            return Created($"api/User/{createdUser.Id}", createdUser);
+            return createdUser;
         }
 
         [HttpPut("{user}")]

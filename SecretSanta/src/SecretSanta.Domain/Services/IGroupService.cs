@@ -10,13 +10,13 @@ namespace SecretSanta.Domain.Services
 
         Group UpdateGroup(Group group);
 
-        void RemoveGroup(Group group);
+        Group RemoveGroup(Group group);
 
-        Group AddUserToGroup(int userId, Group group);
+        User AddUserToGroup(int groupId, User user);
 
-        void RemoveUserFromGroup(int userId, Group group);
+        User RemoveUserFromGroup(int groupId, User user);
 
-        List<User> FetchAllUsersInGroup(Group group);
+        List<User> FetchAllUsersInGroup(int groupId);
 
         List<Group> FetchAllGroups();
     }

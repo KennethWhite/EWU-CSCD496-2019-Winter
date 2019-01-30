@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SecretSanta.Domain.Models;
 
 namespace SecretSanta.Domain.Services
@@ -28,28 +30,46 @@ namespace SecretSanta.Domain.Services
             return group;
         }
 
-        public void RemoveGroup(Group group)
+        public Group RemoveGroup(Group group)
         {
             if (group == null) throw new ArgumentNullException(nameof(group));
 
-            DbContext.Groups.Remove(group);
+            EntityEntry<Group> groupRemoved = DbContext.Groups.Remove(group);
             DbContext.SaveChanges();
+            return groupRemoved.Entity;
         }
 
-        public Group AddUserToGroup(int userId, Group group)
+        public User AddUserToGroup(int groupId, User user)
         {
-            throw new NotImplementedException();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+
+            var group = DbContext.Groups.Include(g => g.GroupUsers)
+                .SingleOrDefault(g => g.Id == groupId);
+            var groupUser = new GroupUser {GroupId = groupId, UserId = user.Id, User = user};
+            group?.GroupUsers.Add(groupUser);
+            DbContext.SaveChanges();
+            return user;
         }
 
-        public void RemoveUserFromGroup(int userId, Group group)
+        public User RemoveUserFromGroup(int groupId, User user)
         {
-            throw new NotImplementedException();
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            
+            var group = DbContext.Groups.Include(g => g.GroupUsers)
+                .SingleOrDefault(g => g.Id == groupId);
+            var userGroupToRemove = group?.GroupUsers.Single(ug => ug.GroupId == groupId && ug.UserId == user.Id);
+            group?.GroupUsers.Remove(userGroupToRemove);
+            DbContext.SaveChanges();
+            return user;
         }
 
-        public List<User> FetchAllUsersInGroup(Group group)
+        public List<User> FetchAllUsersInGroup(int groupId)
         {
-            throw new NotImplementedException();
+            var group = DbContext.Groups.Include(g => g.GroupUsers)
+                .SingleOrDefault(g => g.Id == groupId);
+            return group?.GroupUsers.Select(gu => gu.User).ToList();
         }
+
 
         public List<Group> FetchAllGroups()
         {

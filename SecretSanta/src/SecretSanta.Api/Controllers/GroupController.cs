@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Transactions;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
@@ -26,20 +27,49 @@ namespace SecretSanta.Api.Controllers
             return new DTO.Group(_GroupService.AddGroup(DTO.Group.ToDomain(group)));
         }
 
-        [HttpPut]//todo multiple httpPuts on the same route
+        [HttpPut]
         public ActionResult<DTO.Group> UpdateGroup(DTO.Group group)
         {
             if (group == null) return BadRequest();
+            
             return new DTO.Group(_GroupService.UpdateGroup(DTO.Group.ToDomain(group)));
         }
         
-        [HttpPut]
-        public ActionResult RemoveGroup(DTO.Group group)
+        [HttpDelete]
+        public ActionResult<DTO.Group> RemoveGroup(DTO.Group group)
         {
             if (group == null) return BadRequest();
-            _GroupService.RemoveGroup(DTO.Group.ToDomain(group));
-            return Ok();
+            
+            return new DTO.Group(_GroupService.RemoveGroup(DTO.Group.ToDomain(group)));
         }
+
+        [HttpPost("{groupId}")]
+        public ActionResult<DTO.User> AddUserToGroup(int groupId, DTO.User user)
+        {
+            if (groupId <= 0) return NotFound();
+            if (user == null) return BadRequest();
+            
+            var userAdded = _GroupService.AddUserToGroup(groupId, DTO.User.ToDomain(user));
+            return new DTO.User(userAdded);
+        }
+        
+        [HttpDelete("{groupId}")]
+        public ActionResult<DTO.User> RemoveUserFromGroup(int groupId, DTO.User user)
+        {
+            if (groupId <= 0) return NotFound();
+            if (user == null) return BadRequest();
+            
+            return new DTO.User(_GroupService.RemoveUserFromGroup(groupId, DTO.User.ToDomain(user)));
+        }
+
+        [HttpGet("{groupId}")]
+        public ActionResult<List<DTO.User>> FetchAllUsersInGroup(int groupId)
+        {
+            if (groupId <= 0) return NotFound();
+
+            return _GroupService.FetchAllUsersInGroup(groupId).Select(user => new DTO.User(user)).ToList();
+        }
+        
 
         [HttpGet]
         public ActionResult<List<DTO.Group>> GetAllGroups()

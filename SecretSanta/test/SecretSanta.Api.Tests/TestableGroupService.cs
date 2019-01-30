@@ -8,49 +8,54 @@ namespace SecretSanta.Api.Tests
 {
     public class TestableGroupService : IGroupService
     {
-        public List<Group> AllGroups { get; set; }
-        public int LastGroupModified;
+        public List<Group> GroupsToReturn { get; set; }
+        public List<User> UsersToReturn { get; set; }
+        public Group LastGroupModified;
+        public int LastGroupIDModified { get; set; }
+        public User LastUserModified { get; set; }
         
         public Group AddGroup(Group group)
         {
-            LastGroupModified = group.Id;
-            AllGroups.Add(group);
+            LastGroupModified = group;
             return group;
         }
 
         public Group UpdateGroup(Group group)
         {
-            LastGroupModified = group.Id;
-            var groupToUpdate = AllGroups.Single(g => g.Id == group.Id);
-            groupToUpdate.Name = group.Name;
-            groupToUpdate.GroupUsers = group.GroupUsers;
+            LastGroupModified = group;
             return group;
         }
 
-        public void RemoveGroup(Group group)
+        public Group RemoveGroup(Group group)
         {
-            LastGroupModified = group.Id;
-            AllGroups.Remove(AllGroups.Single(g => g.Id == group.Id));
+            LastGroupModified = group;
+            return group;
         }
 
-        public Group AddUserToGroup(int userId, Group group)
+        public User AddUserToGroup(int groupId, User user)
         {
-            throw new NotImplementedException();
+            LastGroupIDModified = groupId;
+            LastUserModified = user;
+            return user;
         }
 
-        public void RemoveUserFromGroup(int userId, Group group)
+        public User RemoveUserFromGroup(int groupId, User user)
         {
-            throw new NotImplementedException();
+            LastGroupIDModified = groupId;
+            LastUserModified = user;
+            return user;
         }
 
-        public List<User> FetchAllUsersInGroup(Group group)
+        public List<User> FetchAllUsersInGroup(int groupId)
         {
-            throw new NotImplementedException();
+            LastGroupIDModified = groupId;
+            return UsersToReturn;
         }
+
 
         public List<Group> FetchAllGroups()
         {
-            return AllGroups;
+            return GroupsToReturn;
         }
     }
 }
