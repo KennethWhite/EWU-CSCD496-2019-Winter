@@ -16,7 +16,7 @@ namespace SecretSanta.Api.DTO
         public GroupUser(Domain.Models.GroupUser domGroupUser)
         {
             GroupId = domGroupUser.GroupId;
-            Group = domGroupUser.Group;
+            Group = new Group(domGroupUser.Group);
             UserId = domGroupUser.UserId;
             User = new User(domGroupUser.User);
         }
