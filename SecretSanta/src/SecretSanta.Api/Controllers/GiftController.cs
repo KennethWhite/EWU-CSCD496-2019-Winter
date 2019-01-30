@@ -47,7 +47,7 @@ namespace SecretSanta.Api.Controllers
             return new DTO.Gift(_GiftService.UpdateGiftForUser(userId, DTO.Gift.ToDomain(gift)));
         }
         
-        // Put api/Gift/5
+        // Put api/Gift
         [HttpPut]
         public ActionResult RemoveGift(DTO.Gift gift)
         {

@@ -26,7 +26,7 @@ namespace SecretSanta.Api.Controllers
             return new DTO.Group(_GroupService.AddGroup(DTO.Group.ToDomain(group)));
         }
 
-        [HttpPut]
+        [HttpPut]//todo multiple httpPuts on the same route
         public ActionResult<DTO.Group> UpdateGroup(DTO.Group group)
         {
             if (group == null) return BadRequest();
