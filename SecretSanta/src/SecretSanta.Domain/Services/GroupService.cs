@@ -28,22 +28,25 @@ namespace SecretSanta.Domain.Services
             return group;
         }
 
-        public void RemoveGroup(Group @group)
+        public void RemoveGroup(Group group)
+        {
+            if (group == null) throw new ArgumentNullException(nameof(group));
+
+            DbContext.Groups.Remove(group);
+            DbContext.SaveChanges();
+        }
+
+        public Group AddUserToGroup(int userId, Group group)
         {
             throw new NotImplementedException();
         }
 
-        public Group AddUserToGroup(int userId, Group @group)
+        public void RemoveUserFromGroup(int userId, Group group)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveUserFromGroup(int userId, Group @group)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<User> FetchAllUsersInGroup(Group @group)
+        public List<User> FetchAllUsersInGroup(Group group)
         {
             throw new NotImplementedException();
         }

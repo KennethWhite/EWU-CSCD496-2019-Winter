@@ -19,13 +19,28 @@ namespace SecretSanta.Api.Controllers
         }
         
         [HttpPost]
-        public ActionResult<DTO.Group> AddGroup(DTO.Group @group)
+        public ActionResult<DTO.Group> AddGroup(DTO.Group group)
         {
             if (group == null) return BadRequest();
             
             return new DTO.Group(_GroupService.AddGroup(DTO.Group.ToDomain(group)));
         }
+
+        [HttpPut]
+        public ActionResult<DTO.Group> UpdateGroup(DTO.Group group)
+        {
+            if (group == null) return BadRequest();
+            return new DTO.Group(_GroupService.UpdateGroup(DTO.Group.ToDomain(group)));
+        }
         
+        [HttpPut]
+        public ActionResult RemoveGroup(DTO.Group group)
+        {
+            if (group == null) return BadRequest();
+            _GroupService.RemoveGroup(DTO.Group.ToDomain(group));
+            return Ok();
+        }
+
         [HttpGet]
         public ActionResult<List<DTO.Group>> GetAllGroups()
         {

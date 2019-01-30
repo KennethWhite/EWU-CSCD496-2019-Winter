@@ -7,17 +7,17 @@ namespace SecretSanta.Domain.Services
     {
         
         
-        Group AddGroup(Group @group);
+        Group AddGroup(Group group);
 
-        Group UpdateGroup(Group @group);
+        Group UpdateGroup(Group group);
 
-        void RemoveGroup(Group @group);
+        void RemoveGroup(Group group);
 
-        Group AddUserToGroup(int userId, Group @group);
+        Group AddUserToGroup(int userId, Group group);
 
-        void RemoveUserFromGroup(int userId, Group @group);
+        void RemoveUserFromGroup(int userId, Group group);
 
-        List<User> FetchAllUsersInGroup(Group @group);
+        List<User> FetchAllUsersInGroup(Group group);
 
         List<Group> FetchAllGroups();
     }
