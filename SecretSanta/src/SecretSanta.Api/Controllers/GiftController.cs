@@ -29,7 +29,7 @@ namespace SecretSanta.Api.Controllers
             return databaseUsers.Select(x => new DTO.Gift(x)).ToList();
         }
         
-        // Put api/Gift/5
+        // Post api/Gift/5
         [HttpPost("{userId}")]
         public ActionResult<DTO.Gift> AddGiftForUser(int userId, DTO.Gift gift)
         {
@@ -40,14 +40,20 @@ namespace SecretSanta.Api.Controllers
         
         // Put api/Gift/5
         [HttpPut("{userId}")]
-        public ActionResult RemoveGiftForUser(int userId, DTO.Gift gift)
+        public ActionResult<DTO.Gift> UpdateGiftForUser(int userId, DTO.Gift gift)
         {
             if (userId <= 0) return NotFound();
+            if (gift == null) return BadRequest();
+            return new DTO.Gift(_GiftService.UpdateGiftForUser(userId, DTO.Gift.ToDomain(gift)));
+        }
+        
+        // Put api/Gift/5
+        [HttpPut("{userId}")]
+        public ActionResult RemoveGift(DTO.Gift gift)
+        {
             if (gift == null) return BadRequest();
             _GiftService.RemoveGift(DTO.Gift.ToDomain(gift));
             return Ok();
         }
-        
-        
     }
 }

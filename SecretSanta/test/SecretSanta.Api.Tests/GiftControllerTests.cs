@@ -19,10 +19,23 @@ namespace SecretSanta.Api.Tests
         }
 
         [TestMethod]
+        public void GetGiftForUser_RequiresPositiveUserId()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(-1);
+
+            Assert.IsTrue(result.Result is NotFoundResult);
+            //This check ensures that the service was not called
+            Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
+        }
+
+        [TestMethod]
         public void GetGiftForUser_ReturnsUsersFromService()
         {
             var gift = CreateGiftWithId(1);
-            var testService = new TestableGiftService {UserGiftsToReturn =  new List<Gift> {gift}};
+            var testService = new TestableGiftService {UserGiftsToReturn = new List<Gift> {gift}};
             var controller = new GiftController(testService);
 
             ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(4);
@@ -36,14 +49,18 @@ namespace SecretSanta.Api.Tests
             Assert.AreEqual(gift.OrderOfImportance, resultGift.OrderOfImportance);
         }
 
+
+        
+        
         [TestMethod]
-        public void GetGiftForUser_RequiresPositiveUserId()
+        public void AddGiftForUser_RequiresPositiveUserId()
         {
             var testService = new TestableGiftService();
             var controller = new GiftController(testService);
 
-            ActionResult<List<DTO.Gift>> result = controller.GetGiftForUser(-1);
-            
+            var gift = new DTO.Gift(CreateGiftWithId(1));
+            ActionResult<DTO.Gift> result = controller.AddGiftForUser(-1, gift);
+
             Assert.IsTrue(result.Result is NotFoundResult);
             //This check ensures that the service was not called
             Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
@@ -54,39 +71,111 @@ namespace SecretSanta.Api.Tests
         {
             var testService = new TestableGiftService();
             var controller = new GiftController(testService);
-            var result = controller.AddGiftForUser(5, null);
-            Assert.IsTrue(result is BadRequestResult);
-            
+            ActionResult<DTO.Gift> result = controller.AddGiftForUser(1, null);
+
+            Assert.IsTrue(result.Result is BadRequestResult);
+            //This check ensures that the service was not called
+            Assert.AreEqual(0, testService.GetGiftsForUser_UserId);
         }
 
         [TestMethod]
-        public void AddGiftForUser_ReturnAdditionIsTrue()
+        public void AddGiftForUser_ReturnAddition()
         {
-            var testService = new TestableGiftService{UserGiftsToReturn =  new List<Gift>()};
+            var testService = new TestableGiftService {UserGiftsToReturn = new List<Gift>()};
             var controller = new GiftController(testService);
             var gift = CreateGiftWithId(1);
             var result = controller.AddGiftForUser(1, new DTO.Gift(gift));
             var resultGift = result.Value;
             Assert.AreEqual(1, testService.UserGiftsToReturn.Count);
+            Assert.AreEqual(resultGift.Id, testService.AddGiftsForUser_UserId);
+            Assert.AreEqual(gift.Id, testService.AddGiftsForUser_UserId);
             Assert.AreEqual(gift.Id, resultGift.Id);
             Assert.AreEqual(gift.Title, resultGift.Title);
+        }
+        
+        
+        
+        
+        [TestMethod]
+        public void UpdateGiftForUser_RequiresPositiveUserId()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+
+            var gift = new DTO.Gift(CreateGiftWithId(1));
+            ActionResult<DTO.Gift> result = controller.UpdateGiftForUser(-1, gift);
+
+            Assert.IsTrue(result.Result is NotFoundResult);
+            //This check ensures that the service was not called
+            Assert.AreEqual(0, testService.UpdateGiftsForUser_GiftId);
+        }
+
+        [TestMethod]
+        public void UpdateGiftForUser_RequiresGift()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+            ActionResult<DTO.Gift> result = controller.UpdateGiftForUser(1, null);
+
+            Assert.IsTrue(result.Result is BadRequestResult);
+            //This check ensures that the service was not called
+            Assert.AreEqual(0, testService.UpdateGiftsForUser_GiftId);
+        }
+
+        [TestMethod]
+        public void UpdateGiftForUser_ReturnUpdated()
+        {
+            var testService = new TestableGiftService
+            {
+                UserGiftsToReturn = new List<Gift>
+                {
+                    CreateGiftWithId(1), CreateGiftWithId(2), CreateGiftWithId(3)
+                }
+            };
+            var controller = new GiftController(testService);
+            var oldGift = CreateGiftWithId(2);
+            var updateGift = CreateGiftWithId(2);
+            updateGift.Title = "New Title";
+            updateGift.Description = "New Desc";
+            var result = controller.UpdateGiftForUser(1, new DTO.Gift(updateGift));
+            var resultGift = result.Value;
+            Assert.AreEqual(3, testService.UserGiftsToReturn.Count);
+            Assert.AreEqual(oldGift.Id, testService.UpdateGiftsForUser_GiftId);
+            Assert.AreEqual(oldGift.Id, resultGift.Id);
+            Assert.AreNotEqual(oldGift.Title, resultGift.Title);
+        }
+        
+
+        [TestMethod]
+        public void RemoveGiftForUser_RequiresGift()
+        {
+            var testService = new TestableGiftService();
+            var controller = new GiftController(testService);
+            ActionResult<DTO.Gift> result = controller.RemoveGift(null);
+
+            Assert.IsTrue(result.Result is BadRequestResult);
+            //This check ensures that the service was not called
+            Assert.AreEqual(0, testService.RemoveGifts_GiftId);
         }
 
         [TestMethod]
         public void RemoveGiftForUser_GiftIsRemoved()
         {
-            var testService = new TestableGiftService{UserGiftsToReturn =  new List<Gift>
+            var testService = new TestableGiftService
             {
-                CreateGiftWithId(1), CreateGiftWithId(2), CreateGiftWithId(3)
-            }};
+                UserGiftsToReturn = new List<Gift>
+                {
+                    CreateGiftWithId(1), CreateGiftWithId(2), CreateGiftWithId(3)
+                }
+            };
             var controller = new GiftController(testService);
-
-            var giftToRemove = testService.UserGiftsToReturn[1];
+            var giftToRemove = new DTO.Gift(testService.UserGiftsToReturn[1]);
             Assert.AreEqual<int>(3, testService.UserGiftsToReturn.Count);
-            testService.RemoveGift(giftToRemove);
+            controller.RemoveGift(giftToRemove);
             Assert.AreEqual<int>(2, testService.UserGiftsToReturn.Count);
             Assert.AreEqual<int>(1, testService.UserGiftsToReturn[0].Id);
             Assert.AreEqual<int>(3, testService.UserGiftsToReturn[1].Id);
+            Assert.AreEqual(giftToRemove.Id, testService.RemoveGifts_GiftId);
         }
 
         private Gift CreateGiftWithId(int id)
