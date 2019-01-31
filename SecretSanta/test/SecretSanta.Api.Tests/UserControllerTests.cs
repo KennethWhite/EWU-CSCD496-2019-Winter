@@ -37,8 +37,9 @@ namespace SecretSanta.Api.Tests
 
             DTO.User resultUser = result.Value;
             Assert.AreEqual<int>(user.Id, TestService.LastModifiedUser.Id);
-            Assert.AreEqual<string>(user.FirstName, TestService.LastModifiedUser.FirstName);
-            Assert.AreEqual<string>(user.LastName, TestService.LastModifiedUser.LastName);
+            Assert.AreEqual<int>(user.Id, resultUser.Id);
+            Assert.AreEqual<string>(user.FirstName, resultUser.FirstName);
+            Assert.AreEqual<string>(user.LastName, resultUser.LastName);
         }
 
         [TestMethod]
@@ -54,6 +55,7 @@ namespace SecretSanta.Api.Tests
             var user = CreateUser(4, "Bill", "Nye");
             ActionResult<DTO.User> result = UserController.UpdateUser(new DTO.User(user));
             DTO.User resultUser = result.Value; 
+            Assert.AreEqual<int>(user.Id, TestService.LastModifiedUser.Id);
             Assert.AreEqual<int>(user.Id, resultUser.Id);
             Assert.AreEqual<string>(user.FirstName, resultUser.FirstName);
             Assert.AreEqual<string>(user.LastName, resultUser.LastName);
@@ -72,6 +74,7 @@ namespace SecretSanta.Api.Tests
             var user = CreateUser(42, "Levar", "Burton");
             ActionResult<DTO.User> result = UserController.DeleteUser(new DTO.User(user));
             DTO.User resultUser = result.Value;
+            Assert.AreEqual<int>(user.Id, TestService.LastModifiedUser.Id);
             Assert.AreEqual<int>(user.Id, resultUser.Id);
             Assert.AreEqual<string>(user.FirstName, resultUser.FirstName);
             Assert.AreEqual<string>(user.LastName, resultUser.LastName);
