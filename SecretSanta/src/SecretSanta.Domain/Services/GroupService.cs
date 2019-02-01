@@ -30,7 +30,7 @@ namespace SecretSanta.Domain.Services
             return group;
         }
 
-        public Group RemoveGroup(Group group)//todo Test all GroupService methods below
+        public Group RemoveGroup(Group group)
         {
             if (group == null) throw new ArgumentNullException(nameof(group));
 
@@ -65,9 +65,10 @@ namespace SecretSanta.Domain.Services
 
         public List<User> FetchAllUsersInGroup(int groupId)
         {
-            var group = DbContext.Groups.Include(g => g.GroupUsers)
+          var group = DbContext.Groups.Include(g => g.GroupUsers).ThenInclude(gu => gu.User)
                 .SingleOrDefault(g => g.Id == groupId);
-            return group?.GroupUsers.Select(gu => gu.User).ToList();
+            var users = group?.GroupUsers.Select(gu => gu.User).ToList();
+            return users;
         }
 
 
