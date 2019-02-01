@@ -174,6 +174,48 @@ namespace SecretSanta.Domain.Tests.Services
         }
 
         [TestMethod]
+        public void RemoveUserFromGroup_UserIsRemoved()
+        {
+            var group = new Group
+            {
+                Name = "Test Group"
+            };
+            var user = new User
+            {
+                FirstName = "Wyatt",
+                LastName = "Earp"
+            };
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Groups.Add(group);
+                context.Users.Add(user);
+                context.SaveChanges();
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+                User addedUser = service.AddUserToGroup(1, user);
+                Assert.AreEqual<User>(addedUser, user);
+            }
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+                User removedUser = service.RemoveUserFromGroup(1, user);
+                Assert.AreEqual<User>(removedUser, user);
+            }
+            using(var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+                Assert.IsTrue(service.FetchAllUsersInGroup(1).Count == 0);
+            }
+
+
+        }
+
+
+        [TestMethod]
         public void FetchAllUsersInGroup_ValidID_UsersAreReturned ()
         {
             var group = new Group
@@ -215,7 +257,30 @@ namespace SecretSanta.Domain.Tests.Services
         [TestMethod]
         public void FetchAllGroups()
         {
+            var group = new Group
+            {
+                Name = "Test Group"
+            };
 
+            var groupTwo = new Group
+            {
+                Name = "Avengers"
+            };
+
+            using (var context = new ApplicationDbContext(Options))
+            {
+                context.Groups.Add(group);
+                context.Groups.Add(groupTwo);
+                context.SaveChanges();
+            }
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+                var groups = service.FetchAllGroups();
+                Assert.AreEqual<int>(2, groups.Count);
+                Assert.AreEqual<string>(group.Name, groups[0].Name);
+                Assert.AreEqual<string>(groupTwo.Name, groups[1].Name);
+            }
         }
 
     }
