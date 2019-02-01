@@ -1,3 +1,4 @@
+using SecretSanta.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,6 +76,15 @@ namespace SecretSanta.Domain.Services
         public List<Group> FetchAllGroups()
         {
             return DbContext.Groups.ToList();
+        }
+
+        public List<User> GetUsers(int groupId)
+        {
+            return DbContext.Groups
+                .Where(x => x.Id == groupId)
+                .SelectMany(x => x.GroupUsers)
+                .Select(x => x.User)
+                .ToList();
         }
     }
 }
