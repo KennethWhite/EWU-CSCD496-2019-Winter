@@ -236,6 +236,8 @@ namespace SecretSanta.Domain.Tests.Services
             using (var context = new ApplicationDbContext(Options))
             {
                 context.Groups.Add(group);
+                context.Users.Add(cowboy);
+                context.Users.Add(alien);
                 context.SaveChanges();
             }
             

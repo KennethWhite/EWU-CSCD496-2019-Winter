@@ -45,7 +45,7 @@ namespace SecretSanta.Domain.Services
 
             var group = DbContext.Groups.Include(g => g.GroupUsers)
                 .SingleOrDefault(g => g.Id == groupId);
-            var groupUser = new GroupUser {GroupId = groupId, UserId = user.Id, User = user};
+            var groupUser = new GroupUser {GroupId = groupId, UserId = user.Id};
             group?.GroupUsers.Add(groupUser);
             DbContext.SaveChanges();
             return user;
