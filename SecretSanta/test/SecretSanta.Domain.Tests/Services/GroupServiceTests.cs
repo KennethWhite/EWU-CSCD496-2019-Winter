@@ -196,7 +196,7 @@ namespace SecretSanta.Domain.Tests.Services
                 context.Groups.Add(group);
                 context.SaveChanges();
             }
-
+            
             using (var context = new ApplicationDbContext(Options))
             {
                 var service = new GroupService(context);
@@ -207,9 +207,15 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 var service = new GroupService(context);
                 var users = service.FetchAllUsersInGroup(1);
-                Assert.IsTrue(users.Contains(cowboy));
-                Assert.IsTrue(users.Contains(alien));
+                Assert.AreEqual<string>(users[0].FirstName, cowboy.FirstName);
+                Assert.AreEqual<string>(users[1].FirstName, alien.FirstName);
             }
+        }
+
+        [TestMethod]
+        public void FetchAllGroups()
+        {
+
         }
 
     }
