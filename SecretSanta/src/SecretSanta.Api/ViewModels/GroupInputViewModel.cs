@@ -10,16 +10,5 @@ namespace SecretSanta.Api.ViewModels
     {
         public string Name { get; set; }
 
-        public static Group ToModel(GroupInputViewModel viewModel)
-        {
-            if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
-
-            var result = new Group
-            {
-                Name = viewModel.Name,
-            };
-
-            return result;
-        }
     }
 }

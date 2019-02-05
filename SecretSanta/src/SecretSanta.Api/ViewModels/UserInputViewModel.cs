@@ -11,17 +11,5 @@ namespace SecretSanta.Api.ViewModels
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
-        public static User ToModel(UserInputViewModel viewModel)
-        {
-            if (viewModel == null) throw new ArgumentNullException(nameof(viewModel));
-
-            var result = new User
-            {
-                FirstName = viewModel.FirstName,
-                LastName = viewModel.LastName,
-            };
-
-            return result;
-        }
     }
 }

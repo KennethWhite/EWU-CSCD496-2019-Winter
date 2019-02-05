@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using AutoMapper;
 
 namespace SecretSanta.Api.Tests.Controllers
 {
@@ -31,7 +32,10 @@ namespace SecretSanta.Api.Tests.Controllers
                     gift
                 }
             };
-            var controller = new GiftController(testService);
+            var mapper = Mapper.Instance;
+
+            var controller = new GiftController(testService, mapper);
+            
 
             ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(4);
 
@@ -48,7 +52,9 @@ namespace SecretSanta.Api.Tests.Controllers
         public void GetGiftForUser_RequiresPositiveUserId()
         {
             var testService = new TestableGiftService();
-            var controller = new GiftController(testService);
+            var mapper = Mapper.Instance;
+
+            var controller = new GiftController(testService, mapper);
 
             ActionResult<List<GiftViewModel>> result = controller.GetGiftForUser(-1);
 
