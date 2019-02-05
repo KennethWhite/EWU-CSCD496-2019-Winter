@@ -33,7 +33,7 @@ namespace SecretSanta.Api
 
             services.AddScoped<IGiftService, GiftService>();
 
-            var connection = new SqliteConnection("DataSource=:memory:");
+            var connection = new SqliteConnection(Configuration.GetConnectionString("DefaultConnection"));
             connection.Open();
             services.AddDbContext<ApplicationDbContext>(builder =>
             {
