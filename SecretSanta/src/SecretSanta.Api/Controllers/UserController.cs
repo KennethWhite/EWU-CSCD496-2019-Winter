@@ -26,7 +26,7 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/<controller>
         [HttpPost]
-        public ActionResult<UserViewModel> Post(UserInputViewModel userViewModel)
+        public IActionResult Post(UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -35,12 +35,12 @@ namespace SecretSanta.Api.Controllers
 
             var persistedUser = UserService.AddUser(Mapper.Map<User>(userViewModel));
 
-            return Ok(Mapper.Map<UserViewModel>(persistedUser));
+            return new OkObjectResult(Mapper.Map<UserViewModel>(persistedUser));
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        public ActionResult<UserViewModel> Put(int id, UserInputViewModel userViewModel)
+        public IActionResult Put(int id, UserInputViewModel userViewModel)
         {
             if (userViewModel == null)
             {
@@ -63,11 +63,11 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             bool userWasDeleted = UserService.DeleteUser(id);
 
-            return userWasDeleted ? (ActionResult)Ok() : (ActionResult)NotFound();
+            return userWasDeleted ? (IActionResult) Ok() : NotFound();
         }
     }
 }

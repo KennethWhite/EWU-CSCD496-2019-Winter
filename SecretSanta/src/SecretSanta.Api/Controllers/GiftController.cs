@@ -26,7 +26,7 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/Gift/5
         [HttpGet("{userId}")]
-        public ActionResult<List<GiftViewModel>> GetGiftForUser(int userId)
+        public IActionResult GetGiftForUser(int userId)
         {
             if (userId <= 0)
             {
@@ -34,7 +34,7 @@ namespace SecretSanta.Api.Controllers
             }
             List<Gift> databaseUsers = GiftService.GetGiftsForUser(userId);
 
-            return databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList();
+            return new OkObjectResult(databaseUsers.Select(x => Mapper.Map<GiftViewModel>(x)).ToList());
         }
     }
 }
