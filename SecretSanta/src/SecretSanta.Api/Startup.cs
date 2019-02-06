@@ -53,7 +53,7 @@ namespace SecretSanta.Api
             var dependencyContext = DependencyContext.Default;
             var assemblies = dependencyContext.RuntimeLibraries.SelectMany(lib =>
                 lib.GetDefaultAssemblyNames(dependencyContext)
-                    .Where(a => a.Name.Contains("BlogEngine")).Select(Assembly.Load)).ToArray();
+                    .Where(a => a.Name.Contains("SecretSanta")).Select(Assembly.Load)).ToArray();
             services.AddAutoMapper(assemblies);
         }
 
