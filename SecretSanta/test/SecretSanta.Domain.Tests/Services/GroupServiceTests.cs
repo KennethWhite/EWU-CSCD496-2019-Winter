@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using System;
@@ -102,5 +104,41 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreEqual(0, users.Count);
             }
         }
+        [TestMethod]
+        [ExpectedException(typeof(DbUpdateException))]
+        public void AddGroup_MissingName_ExceptionThrown()
+        {
+            var @group = new Group
+            {
+                
+            };
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+                Group addedGroup = service.AddGroup(@group);
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(DbUpdateException))]
+        public void AddGroup_DuplicateName_ExceptionThrown()
+        {
+            var @group = new Group
+            {
+                Name = "Copy Cat"
+            };
+
+            var copyGroup = new Group
+            {
+                Name = "Copy Cat"
+            };
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var service = new GroupService(context);
+                Group addedGroup = service.AddGroup(@group);
+                Group addedCopy = service.AddGroup(copyGroup);
+            }
+        }
+
     }
 }

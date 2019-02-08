@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
@@ -95,5 +96,55 @@ namespace SecretSanta.Domain.Tests.Services
                 Assert.AreEqual("Horse", gifts[0].Title);            
             }
         }
+        [TestMethod]
+        [ExpectedException(typeof(DbUpdateException))]
+        public void AddGift_NoTitle_ExceptionThrown()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                GiftService giftService = new GiftService(context);
+                UserService userService = new UserService(context);
+
+                var user = new User
+                {
+                    FirstName = "Inigo",
+                    LastName = "Montoya"
+                };
+                user = userService.AddUser(user);
+                var gift = new Gift
+                {
+                    OrderOfImportance = 1
+                };
+                var persistedGift = giftService.AddGiftToUser(user.Id, gift);
+            }
+        }
+
+
+        [TestMethod]
+        public void AddGift_NoOrderOfImportance_AddedToUserSuccessfully()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                GiftService giftService = new GiftService(context);
+                UserService userService = new UserService(context);
+
+                var user = new User
+                {
+                    FirstName = "Inigo",
+                    LastName = "Montoya"
+                };
+                user = userService.AddUser(user);
+                var gift = new Gift
+                {
+                    Title = "Arduino"
+                };
+                var persistedGift = giftService.AddGiftToUser(user.Id, gift);
+                Assert.IsNull(persistedGift.OrderOfImportance);
+            }
+        }
+
     }
+
 }
+
+
