@@ -16,6 +16,10 @@ namespace SecretSanta.Domain.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
+            modelBuilder.Entity<Group>().HasIndex(g => g.Name).IsUnique();
+
+            
             modelBuilder.Entity<GroupUser>().HasKey(gu => new { gu.UserId, gu.GroupId });
 
             modelBuilder.Entity<GroupUser>()
@@ -27,6 +31,7 @@ namespace SecretSanta.Domain.Models
                 .HasOne(gu => gu.Group)
                 .WithMany(g => g.GroupUsers)
                 .HasForeignKey(gu => gu.GroupId);
+            
         }
     }
 }
