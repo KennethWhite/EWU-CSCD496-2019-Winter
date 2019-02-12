@@ -36,10 +36,10 @@ namespace SecretSanta.Domain.Services
         {
             List<int> userIds = groupToPair?.GroupUsers?.Select(gu => gu.UserId).ToList();
             List<Pairing> generatedPairings = new List<Pairing>();
-            while (userIds.Count > 0)
-            {
-                //TODO
-            }
+            //while (userIds.Count > 0)
+            //{
+            //    //TODO
+            //}
             return generatedPairings;
         }
 
