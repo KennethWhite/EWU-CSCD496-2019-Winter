@@ -4,9 +4,6 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SecretSanta.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SecretSanta.Api.Tests
 {
