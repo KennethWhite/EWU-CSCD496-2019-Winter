@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Domain.Models;
 using Microsoft.AspNetCore.Http;
+using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Services.Interfaces;
 
 namespace SecretSanta.Api.Controllers
@@ -31,8 +33,9 @@ namespace SecretSanta.Api.Controllers
             if (groupId <= 0) return NotFound();
             
             List<Pairing> pairingsGenerated = await PairingService.GenerateUserPairings(groupId);
-           
-            return CreatedAtAction(nameof(GenerateUserPairings), new { id = groupId}, pairingsGenerated);
+            var pairingViewModels = pairingsGenerated.Select(p => Mapper.Map<PairingViewModel>(p));
+            
+            return CreatedAtAction(nameof(GenerateUserPairings), new { id = groupId}, pairingViewModels);
         }
     }
 }
