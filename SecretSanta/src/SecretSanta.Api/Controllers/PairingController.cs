@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using SecretSanta.Domain.Models;
-using Microsoft.AspNetCore.Http;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Services.Interfaces;
 
@@ -23,19 +21,18 @@ namespace SecretSanta.Api.Controllers
             Mapper = mapper;
         }
 
-        // GET api/Pairing/5
-        [HttpGet("{groupId}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesDefaultResponseType]
+        // POST api/pairing/5
+        [HttpPost("{groupId}")]
+        [Produces(typeof(ICollection<PairingViewModel>))]
         public async Task<IActionResult> GenerateUserPairings(int groupId)
         {
-            if (groupId <= 0) return NotFound();
+            if (groupId <= 0)
+            {
+                return BadRequest("A group id must be specified");
+            }
             
-            List<Pairing> pairingsGenerated = await PairingService.GenerateUserPairings(groupId);
-            var pairingViewModels = pairingsGenerated.Select(p => Mapper.Map<PairingViewModel>(p));
-            
-            return CreatedAtAction(nameof(GenerateUserPairings), new { id = groupId}, pairingViewModels);
+            var pairings = await PairingService.GenerateUserPairings(groupId);
+            return CreatedAtAction(nameof(GenerateUserPairings), new {groupId = groupId}, pairings.Select(p => Mapper.Map<PairingViewModel>(p)).ToList());
         }
     }
 }

@@ -1,8 +1,11 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SecretSanta.Domain.Tests.Services
@@ -62,7 +65,32 @@ namespace SecretSanta.Domain.Tests.Services
             {
                 PairingService pairingService = new PairingService(context);
                 List<Pairing> userPairings = await pairingService.GenerateUserPairings(1);
-                userPairings.GroupBy(u => u.SantaId).SingleOrDefault();
+                var sortedPairings = userPairings.OrderBy(u => u.SantaId).ToList();
+                int prevSantaId = 0;
+                sortedPairings.ForEach(pair => Assert.AreNotEqual(prevSantaId, pair.SantaId));
+
+                IEnumerable<IGrouping<User, Pairing>> groupsBySantaId = userPairings.GroupBy(pair => pair.Santa);
+                foreach (var santaIdGroup in groupsBySantaId)
+                {
+                    var count = santaIdGroup.Count();
+                }
+
+            }
+        }
+
+        
+        [TestMethod]
+        public async Task GeneratePairings_EachPairHasARecipient()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                PairingService pairingService = new PairingService(context);
+                List<Pairing> userPairings = await pairingService.GenerateUserPairings(1);
+                var sortedPairings = userPairings.OrderBy(u => u.RecipientId).ToList();
+                var prevRecipientId = 0;
+                sortedPairings.ForEach(pair => Assert.AreNotEqual(prevRecipientId, pair.RecipientId));
+                Assert.AreNotEqual(sortedPairings.Last().SantaId, sortedPairings.First().RecipientId);
+
             }
         }
     }
