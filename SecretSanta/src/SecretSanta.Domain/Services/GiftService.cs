@@ -22,10 +22,10 @@ namespace SecretSanta.Domain.Services
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
             gift.UserId = userId;
-            await DbContext.Gifts.AddAsync(gift);
+            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<Gift> toReturn = await DbContext.Gifts.AddAsync(gift);
             await DbContext.SaveChangesAsync();
 
-            return gift;
+            return toReturn.Entity;
         }
 
         public async Task<Gift> UpdateGiftForUser(int userId, Gift gift)
