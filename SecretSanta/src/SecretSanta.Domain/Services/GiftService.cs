@@ -17,24 +17,24 @@ namespace SecretSanta.Domain.Services
             DbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-        public Gift AddGiftToUser(int userId, Gift gift)
+        public async Task<Gift> AddGiftToUser(int userId, Gift gift)
         {
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
             gift.UserId = userId;
-            DbContext.Gifts.Add(gift);
-            DbContext.SaveChanges();
+            await DbContext.Gifts.AddAsync(gift);
+            await DbContext.SaveChangesAsync();
 
             return gift;
         }
 
-        public Task<Gift> UpdateGiftForUser(int userId, Gift gift)
+        public async Task<Gift> UpdateGiftForUser(int userId, Gift gift)
         {
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
             gift.UserId = userId;
             DbContext.Gifts.Update(gift);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
 
             return gift;
         }
@@ -44,12 +44,12 @@ namespace SecretSanta.Domain.Services
             return await DbContext.Gifts.Where(g => g.UserId == userId).ToListAsync();
         }
 
-        public void RemoveGift(Gift gift)
+        public async void RemoveGift(Gift gift)
         {
             if (gift == null) throw new ArgumentNullException(nameof(gift));
 
             DbContext.Gifts.Remove(gift);
-            DbContext.SaveChanges();
+            await DbContext.SaveChangesAsync();
         }
     }
 }

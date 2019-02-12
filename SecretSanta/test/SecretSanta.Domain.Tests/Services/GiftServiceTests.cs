@@ -8,7 +8,7 @@ namespace SecretSanta.Domain.Tests.Services
     public class GiftServiceTests : DatabaseServiceTests
     {
         [TestMethod]
-        public void AddGift()
+        public async void AddGift()
         {
             using (var context = new ApplicationDbContext(Options))
             {
@@ -21,7 +21,7 @@ namespace SecretSanta.Domain.Tests.Services
                     LastName = "Montoya"
                 };
 
-                user = userService.AddUser(user);
+                user = await userService.AddUser(user);
 
                 var gift = new Gift
                 {
