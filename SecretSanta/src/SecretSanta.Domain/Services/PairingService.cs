@@ -3,6 +3,7 @@ using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,6 +13,9 @@ namespace SecretSanta.Domain.Services
     public class PairingService : IPairingService
     {
         private ApplicationDbContext DbContext { get; }
+        private static Random _rng = new Random();
+
+
 
         public PairingService(ApplicationDbContext dbContext)
         {
@@ -23,12 +27,21 @@ namespace SecretSanta.Domain.Services
             Group foundGroup = await DbContext.Groups
                 .Include(x => x.GroupUsers)
                 .FirstOrDefaultAsync(x => x.Id == groupId);
-            return await Task.Run<List<Pairing>>(() =>GenerateUserPairings());
+            List<Pairing> pairings = await Task.Run<List<Pairing>>(() => GenerateUserPairings(foundGroup));
+            await DbContext.Pairings.AddRangeAsync(pairings);
+            await DbContext.SaveChangesAsync();
+            return pairings;
         }
 
-        private List<Pairing> GenerateUserPairings()
+        private List<Pairing> GenerateUserPairings(Group groupToPair)
         {
-
+            List<int> userIds = groupToPair?.GroupUsers?.Select(gu => gu.UserId).ToList();
+            List<Pairing> generatedPairings = new List<Pairing>();
+            while (userIds.Count > 0)
+            {
+                //TODO
+            }
+            return generatedPairings;
         }
 
     }
