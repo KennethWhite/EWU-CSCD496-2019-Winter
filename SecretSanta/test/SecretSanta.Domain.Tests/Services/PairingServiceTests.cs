@@ -1,19 +1,15 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SecretSanta.Domain.Tests.Services
 {
     [TestClass]
     public class PairingServiceTests : DatabaseServiceTests
     {
-
         private Group _sut { get; set; }
 
         [TestInitialize]
@@ -21,8 +17,8 @@ namespace SecretSanta.Domain.Tests.Services
         {
             using (var context = new ApplicationDbContext(Options))
             {
-                GroupService groupService = new GroupService(context);
-                UserService userService = new UserService(context);
+                var groupService = new GroupService(context);
+                var userService = new UserService(context);
 
                 var user = new User
                 {
@@ -37,7 +33,7 @@ namespace SecretSanta.Domain.Tests.Services
                 var user3 = new User
                 {
                     FirstName = "Don",
-                    LastName = "Quixote",
+                    LastName = "Quixote"
                 };
 
                 user = await userService.AddUser(user);
@@ -63,8 +59,8 @@ namespace SecretSanta.Domain.Tests.Services
         {
             using (var context = new ApplicationDbContext(Options))
             {
-                PairingService pairingService = new PairingService(context);
-                List<Pairing> userPairings = await pairingService.GenerateUserPairings(1);
+                var pairingService = new PairingService(context);
+                var userPairings = await pairingService.GenerateUserPairings(1);
                 var sortedPairings = userPairings.OrderBy(pair => pair.RecipientId).ToList();
                 for (var i = 0; i < sortedPairings.Count; i++)
                 {
@@ -74,14 +70,14 @@ namespace SecretSanta.Domain.Tests.Services
             }
         }
 
-        
+
         [TestMethod]
         public async Task GeneratePairings_EachPairHasUniqueSanta()
         {
             using (var context = new ApplicationDbContext(Options))
             {
-                PairingService pairingService = new PairingService(context);
-                List<Pairing> userPairings = await pairingService.GenerateUserPairings(1);
+                var pairingService = new PairingService(context);
+                var userPairings = await pairingService.GenerateUserPairings(1);
                 var sortedPairings = userPairings.OrderBy(pair => pair.SantaId).ToList();
                 for (var i = 0; i < sortedPairings.Count; i++)
                 {
@@ -90,5 +86,21 @@ namespace SecretSanta.Domain.Tests.Services
                 }
             }
         }
+
+        [TestMethod]
+        public async Task GeneratePairings_RecipientIsNotOwnSanta()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var pairingService = new PairingService(context);
+                List<Pairing> userPairings = await pairingService.GenerateUserPairings(1);
+                foreach (var pair in userPairings)
+                {
+                    Assert.AreNotEqual<int>(pair.SantaId, pair.RecipientId);
+                }
+            }
+        }
+        
+        
     }
 }
