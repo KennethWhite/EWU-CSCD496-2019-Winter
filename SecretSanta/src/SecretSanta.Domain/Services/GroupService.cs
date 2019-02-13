@@ -32,8 +32,7 @@ namespace SecretSanta.Domain.Services
 
         public async Task<Group> UpdateGroup(Group group)
         {
-            Task<EntityEntry<Group>> task = Task.Run(() => DbContext.Groups.Update(group));
-            EntityEntry<Group> groupUdated = await task;
+            var groupUdated = DbContext.Groups.Update(group);
             await DbContext.SaveChangesAsync();
             return groupUdated.Entity;
         }

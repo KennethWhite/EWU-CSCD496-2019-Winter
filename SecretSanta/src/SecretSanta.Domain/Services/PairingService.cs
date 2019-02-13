@@ -37,20 +37,13 @@ namespace SecretSanta.Domain.Services
         {
             List<Pairing> generatedPairings = new List<Pairing>();
             var rand = Rand;
-            
-            var randUserIds = userIds.OrderBy(id => rand.Next()).ToList(); 
+            var randUserIds = userIds.OrderBy(id => rand.Next()).ToList();
 
-//            var pairs = userIds.SelectMany(id1 => userIds.Where(id2 => id1 != id2),
-//                    (id1, id2) => new Pairing {RecipientId = id1, SantaId = id2}).ToList();    trying to do linq
-
-            var numUsers = randUserIds.Count;
-            for (var i = 0; i < numUsers - 1; i++)
+            for (var i = 0; i < randUserIds.Count - 1; i++)
             {
                 generatedPairings.Add(new Pairing {RecipientId = randUserIds[i], SantaId = randUserIds[i + 1]});
             }
-
-            generatedPairings.Add(new Pairing{RecipientId = randUserIds.Last(), SantaId = randUserIds.First()});
-           
+            generatedPairings.Add(new Pairing {RecipientId = randUserIds.Last(), SantaId = randUserIds.First()});
 
             return generatedPairings;
         }
@@ -66,6 +59,7 @@ namespace SecretSanta.Domain.Services
     {
         private static readonly Random _globalRandom = new Random();
         [ThreadStatic] private static Random _localRandom;
+
 
         public ThreadSafeRandom()
         {

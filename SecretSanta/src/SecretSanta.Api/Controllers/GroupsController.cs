@@ -48,7 +48,6 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/group
         [HttpPost]
-        [Produces(typeof(GroupViewModel))]
         public async Task<IActionResult> Post(GroupInputViewModel viewModel)
         {
             if (viewModel == null)

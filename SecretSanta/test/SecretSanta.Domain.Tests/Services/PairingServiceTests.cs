@@ -59,38 +59,35 @@ namespace SecretSanta.Domain.Tests.Services
 
 
         [TestMethod]
-        public async Task GeneratePairings_SantasHaveOnlyOneRecipient()
+        public async Task GeneratePairings_EachPairHasUniqueRecipient()
         {
             using (var context = new ApplicationDbContext(Options))
             {
                 PairingService pairingService = new PairingService(context);
                 List<Pairing> userPairings = await pairingService.GenerateUserPairings(1);
-                var sortedPairings = userPairings.OrderBy(u => u.SantaId).ToList();
-                int prevSantaId = 0;
-                sortedPairings.ForEach(pair => Assert.AreNotEqual(prevSantaId, pair.SantaId));
-
-                IEnumerable<IGrouping<User, Pairing>> groupsBySantaId = userPairings.GroupBy(pair => pair.Santa);
-                foreach (var santaIdGroup in groupsBySantaId)
+                var sortedPairings = userPairings.OrderBy(pair => pair.RecipientId).ToList();
+                for (var i = 0; i < sortedPairings.Count; i++)
                 {
-                    var count = santaIdGroup.Count();
+                    var pair = sortedPairings[i];
+                    Assert.AreEqual(i + 1, pair.RecipientId);
                 }
-
             }
         }
 
         
         [TestMethod]
-        public async Task GeneratePairings_EachPairHasARecipient()
+        public async Task GeneratePairings_EachPairHasUniqueSanta()
         {
             using (var context = new ApplicationDbContext(Options))
             {
                 PairingService pairingService = new PairingService(context);
                 List<Pairing> userPairings = await pairingService.GenerateUserPairings(1);
-                var sortedPairings = userPairings.OrderBy(u => u.RecipientId).ToList();
-                var prevRecipientId = 0;
-                sortedPairings.ForEach(pair => Assert.AreNotEqual(prevRecipientId, pair.RecipientId));
-                Assert.AreNotEqual(sortedPairings.Last().SantaId, sortedPairings.First().RecipientId);
-
+                var sortedPairings = userPairings.OrderBy(pair => pair.SantaId).ToList();
+                for (var i = 0; i < sortedPairings.Count; i++)
+                {
+                    var pair = sortedPairings[i];
+                    Assert.AreEqual(i + 1, pair.SantaId);
+                }
             }
         }
     }

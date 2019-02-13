@@ -1,15 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json;
 using SecretSanta.Api.Controllers;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
@@ -53,7 +47,7 @@ namespace SecretSanta.Api.Tests.Controllers
                 .Verifiable();
 
             var controller = new PairingController(service.Object, Mapper.Instance);
-            var result = await controller.GenerateUserPairings(1) as CreatedAtActionResult;
+            var result = await controller.GenerateUserPairings(1) as CreatedResult;
             var resultValue = result?.Value as List<PairingViewModel>;
             Assert.IsNotNull(resultValue);
             Assert.AreEqual(3, resultValue.Count);

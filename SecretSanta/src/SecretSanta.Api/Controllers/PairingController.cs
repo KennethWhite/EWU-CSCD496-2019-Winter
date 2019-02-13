@@ -32,7 +32,7 @@ namespace SecretSanta.Api.Controllers
             }
             
             var pairings = await PairingService.GenerateUserPairings(groupId);
-            return CreatedAtAction(nameof(GenerateUserPairings), new {groupId = groupId}, pairings.Select(p => Mapper.Map<PairingViewModel>(p)).ToList());
+            return Created($"/pairing/{groupId}", pairings.Select(p => Mapper.Map<PairingViewModel>(p)).ToList());
         }
     }
 }
