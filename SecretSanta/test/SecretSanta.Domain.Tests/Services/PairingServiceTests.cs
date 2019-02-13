@@ -86,7 +86,7 @@ namespace SecretSanta.Domain.Tests.Services
                 }
             }
         }
-
+        
         [TestMethod]
         public async Task GeneratePairings_RecipientIsNotOwnSanta()
         {
@@ -101,6 +101,28 @@ namespace SecretSanta.Domain.Tests.Services
             }
         }
         
+        
+        [TestMethod]
+        public async Task GeneratePairings_ConsecutiveListsAreDifferent()
+        {
+            using (var context = new ApplicationDbContext(Options))
+            {
+                var pairingService = new PairingService(context);
+                List<Pairing> userPairings = await pairingService.GenerateUserPairings(1);
+                List<Pairing> secondaryPairings = await pairingService.GenerateUserPairings(1);
+                userPairings.OrderBy(pair => pair.SantaId);
+                secondaryPairings.OrderBy(pair => pair.SantaId);
+                
+                Assert.AreEqual<int>(userPairings.Count, secondaryPairings.Count);
+                bool samePairings = true;
+                for (int index = 0; index < userPairings.Count; index++)
+                {
+                    samePairings = samePairings && 
+                                   (userPairings[index].RecipientId == secondaryPairings[index].RecipientId);
+                }
+                Assert.IsFalse(samePairings);
+            }
+        }
         
     }
 }
