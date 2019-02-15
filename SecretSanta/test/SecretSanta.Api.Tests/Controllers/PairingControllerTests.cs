@@ -39,7 +39,7 @@ namespace SecretSanta.Api.Tests.Controllers
             {
                 new Pairing {Id = 1, RecipientId = 1, SantaId = 2},
                 new Pairing {Id = 2, RecipientId = 2, SantaId = 3},
-                new Pairing {Id = 3, RecipientId = 3, SantaId = 4},
+                new Pairing {Id = 3, RecipientId = 3, SantaId = 4}
             };
             var service = new Mock<IPairingService>();
             service.Setup(x => x.GenerateUserPairings(It.IsAny<int>()))

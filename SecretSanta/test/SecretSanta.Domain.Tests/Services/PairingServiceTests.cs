@@ -10,7 +10,6 @@ namespace SecretSanta.Domain.Tests.Services
     [TestClass]
     public class PairingServiceTests : DatabaseServiceTests
     {
-        private Group _sut { get; set; }
 
         [TestInitialize]
         public async Task SetupUsersAndGroupForTests()
