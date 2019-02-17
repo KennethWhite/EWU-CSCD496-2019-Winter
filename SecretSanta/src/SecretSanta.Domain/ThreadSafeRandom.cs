@@ -34,5 +34,11 @@ namespace SecretSanta.Domain
             EnsureRandIsValid();
             return _localRandom.Next();
         }
+
+        public int Next(int max)
+        {
+            EnsureRandIsValid();
+            return _localRandom.Next(max);
+        }
     }
 }

@@ -19,5 +19,17 @@ namespace SecretSanta.Domain.Tests
                 throw new InvalidOperationException("Error calling Next() when there is no next int.");
             return RandInts[Index++];
         }
+
+        public int Next(int max)
+        {
+            while (Index < RandInts.Count && RandInts[Index] > max)
+            {
+                Index++;
+            }
+            
+           if(Index > RandInts.Count -1)
+                throw new InvalidOperationException("Error calling Next(max) when there is no next int less than the maximum.");
+            return RandInts[Index];
+        }
     }
 }
