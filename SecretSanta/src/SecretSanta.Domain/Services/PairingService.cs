@@ -26,6 +26,9 @@ namespace SecretSanta.Domain.Services
 
         public async Task<List<Pairing>> GenerateUserPairings(int groupId)
         {
+            //removes existing pairs for the group
+            (await GetUserPairings(groupId)).ForEach(pair => DbContext.Remove(pair));
+            
             var userIds = await DbContext.Groups
                 .Where(g => g.Id == groupId)
                 .SelectMany(g => g.GroupUsers, (g, gu) => gu.UserId)
@@ -46,60 +49,12 @@ namespace SecretSanta.Domain.Services
 
             for (var i = 0; i < randUserIds.Count - 1; i++)
             {
-                generatedPairings.Add(new Pairing {RecipientId = randUserIds[i], SantaId = randUserIds[i + 1]});
+                generatedPairings.Add(new Pairing {RecipientId = randUserIds[i], SantaId = randUserIds[i + 1], GroupId = groupId});
             }
 
-            generatedPairings.Add(new Pairing {RecipientId = randUserIds.Last(), SantaId = randUserIds.First()});
+            generatedPairings.Add(new Pairing {RecipientId = randUserIds.Last(), SantaId = randUserIds.First(), GroupId = groupId});
 
             return generatedPairings;
         }
-    }
-
-
-    /**
-     * A global instance of random is created. It serves as the seed for a local random object
-     * Whenever a ThreadSafeRandom object is created, the global random is locked and its Next() method
-     * is called and used as the seed for a local random. Then the local random object can be used freely
-     * Need to find a way to test it though.
-     */
-    public class ThreadSafeRandom : IRandom
-    {
-        private static readonly Random _globalRandom = new Random();
-        [ThreadStatic] private static Random _localRandom;
-
-
-        public ThreadSafeRandom()
-        {
-            EnsureRandIsValid();
-        }
-
-        private void EnsureRandIsValid()
-        {
-            if (_localRandom == null)
-            {
-                lock (_globalRandom)
-                {
-                    _localRandom = new Random(_globalRandom.Next());
-                }
-            }
-        }
-
-        public int Next()
-        {
-            EnsureRandIsValid();
-            return _localRandom.Next();
-        }
-
-        public int Next(int min, int max)
-        {
-            EnsureRandIsValid();
-            return _localRandom.Next(min, max);
-        }
-    }
-
-    public interface IRandom
-    {
-        int Next();
-        int Next(int min, int max);
     }
 }
