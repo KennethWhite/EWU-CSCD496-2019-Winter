@@ -19,6 +19,11 @@ namespace SecretSanta.Domain.Services
             Rand = rand ?? new ThreadSafeRandom();
         }
 
+        public async Task<List<Pairing>> GetUserPairings(int groupId)
+        {
+            return await DbContext.Pairings.Where(pair => pair.GroupId == groupId).ToListAsync();
+        }
+
         public async Task<List<Pairing>> GenerateUserPairings(int groupId)
         {
             var userIds = await DbContext.Groups
@@ -26,14 +31,14 @@ namespace SecretSanta.Domain.Services
                 .SelectMany(g => g.GroupUsers, (g, gu) => gu.UserId)
                 .ToListAsync();
 
-            List<Pairing> pairings = await Task.Run(() => GenerateUserPairings(userIds));
+            List<Pairing> pairings = await Task.Run(() => GenerateUserPairings(userIds, groupId));
 
             await DbContext.Pairings.AddRangeAsync(pairings);
             await DbContext.SaveChangesAsync();
             return pairings;
         }
 
-        private List<Pairing> GenerateUserPairings(List<int> userIds)
+        private List<Pairing> GenerateUserPairings(List<int> userIds, int groupId)
         {
             List<Pairing> generatedPairings = new List<Pairing>();
             var rand = Rand;
@@ -43,11 +48,13 @@ namespace SecretSanta.Domain.Services
             {
                 generatedPairings.Add(new Pairing {RecipientId = randUserIds[i], SantaId = randUserIds[i + 1]});
             }
+
             generatedPairings.Add(new Pairing {RecipientId = randUserIds.Last(), SantaId = randUserIds.First()});
 
             return generatedPairings;
         }
     }
+
 
     /**
      * A global instance of random is created. It serves as the seed for a local random object
