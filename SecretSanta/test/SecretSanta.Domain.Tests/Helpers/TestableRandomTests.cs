@@ -1,23 +1,22 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SecretSanta.Domain.Tests
+namespace SecretSanta.Domain.Tests.Helpers
 {
     [TestClass]
     public class TestableRandomTests
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void TestableRandom_ThrowsErrorIfListIsNull()
+        public void TestableRandom_ThrowsExceptionIfListIsNull()
         {
             var testableRand = new TestableRandom(null);
         }
         
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void TestableRandom_ThrowsErrorIfNoNext()
+        public void TestableRandom_ThrowsExceptionIfNoNext()
         {
             var randInts = Enumerable.Range(1,2).ToList();
             var testableRand = new TestableRandom(randInts);

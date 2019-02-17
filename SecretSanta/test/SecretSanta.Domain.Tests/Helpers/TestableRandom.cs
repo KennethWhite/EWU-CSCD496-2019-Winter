@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SecretSanta.Domain.Tests
+namespace SecretSanta.Domain.Tests.Helpers
 {
     public class TestableRandom : IRandom
     {
