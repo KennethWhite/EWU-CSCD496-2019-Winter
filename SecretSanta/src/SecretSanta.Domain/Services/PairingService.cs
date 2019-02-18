@@ -19,15 +19,11 @@ namespace SecretSanta.Domain.Services
             Rand = rand ?? new ThreadSafeRandom();
         }
 
-        public async Task<List<Pairing>> GetUserPairings(int groupId)
-        {
-            return await DbContext.Pairings.Where(pair => pair.GroupId == groupId).ToListAsync();
-        }
-
         public async Task<List<Pairing>> GenerateUserPairings(int groupId)
         {
-            //removes existing pairs for the group
-            (await GetUserPairings(groupId)).ForEach(pair => DbContext.Remove(pair));
+            //remove existing pairs for the group
+            var existingPairs = DbContext.Pairings.Where(p => p.GroupId == groupId).ToList();
+            existingPairs.ForEach(pair => DbContext.Pairings.Remove(pair));
             
             var userIds = await DbContext.Groups
                 .Where(g => g.Id == groupId)
@@ -44,8 +40,7 @@ namespace SecretSanta.Domain.Services
         private List<Pairing> GenerateUserPairings(List<int> userIds, int groupId)
         {
             List<Pairing> generatedPairings = new List<Pairing>();
-            var rand = Rand;
-            var randUserIds = userIds.OrderBy(id => rand.Next()).ToList();
+            var randUserIds = userIds.Randomize(Rand).ToList();
 
             for (var i = 0; i < randUserIds.Count - 1; i++)
             {
