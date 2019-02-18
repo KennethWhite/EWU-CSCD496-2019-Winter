@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -14,23 +16,6 @@ namespace SecretSanta.Api.Tests.Controllers
     [TestClass]
     public class PairingControllerTests
     {
-        private CustomWebApplicationFactory<Startup> Factory { get; set; }
-
-        [TestInitialize]
-        public void CreateWebFactory()
-        {
-            Factory = new CustomWebApplicationFactory<Startup>();
-        }
-
-        [TestMethod]
-        public async Task GenerateUserPairings_RequiresPositiveId()
-        {
-            var service = new Mock<IPairingService>(MockBehavior.Strict);
-            var controller = new PairingController(service.Object, Mapper.Instance);
-            
-            var result = await controller.GenerateUserPairings(-1);
-            Assert.IsTrue(result is BadRequestObjectResult);
-        }
 
         [TestMethod]
         public async Task GenerateUserPairings_ReturnsGeneratedPairings()
@@ -55,6 +40,16 @@ namespace SecretSanta.Api.Tests.Controllers
             Assert.AreEqual(1, resultValue[0].RecipientId);
             Assert.AreEqual(2, resultValue[0].SantaId);
             service.VerifyAll();
+        }
+        
+        [TestMethod]
+        public async Task GenerateUserPairings_RouteCalled_RequiresPositiveId()
+        {
+            var factory = new CustomWebApplicationFactory<Startup>();
+            var client = factory.CreateClient();
+            // IDK what to pass as the content since the value is passed in URI
+            HttpResponseMessage response = await client.PostAsync("api/pairing/-1", null);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }
 }

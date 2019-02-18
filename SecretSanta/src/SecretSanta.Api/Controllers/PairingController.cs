@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,8 +32,18 @@ namespace SecretSanta.Api.Controllers
                 return BadRequest("A group id must be specified");
             }
             
-            var pairings = await PairingService.GenerateUserPairings(groupId);
-            return Created($"/pairing/{groupId}", pairings.Select(p => Mapper.Map<PairingViewModel>(p)).ToList());
+
+            IActionResult ret;
+            try
+            {
+                var pairings = await PairingService.GenerateUserPairings(groupId);
+                ret = new CreatedResult($"/pairing/{groupId}", pairings.Select(p => Mapper.Map<PairingViewModel>(p)).ToList());
+            }
+            catch (Exception e)
+            {
+                ret = base.NotFound($"exception: {e.Message}");
+            }
+            return ret;
         }
     }
 }
