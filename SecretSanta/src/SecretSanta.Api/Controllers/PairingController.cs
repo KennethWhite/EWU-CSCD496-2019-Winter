@@ -25,6 +25,7 @@ namespace SecretSanta.Api.Controllers
         // POST api/pairing/5
         [HttpPost("{groupId}")]
         [Produces(typeof(ICollection<PairingViewModel>))]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> GenerateUserPairings(int groupId)
         {
             if (groupId <= 0)
