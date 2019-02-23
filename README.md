@@ -2,6 +2,7 @@
 
 [![Join the chat at https://gitter.im/IntelliTect/CSCD496-2019-Winter](https://badges.gitter.im/IntelliTect/CSCD496-2019-Winter.svg)](https://gitter.im/IntelliTect/CSCD496-2019-Winter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![Build Status](https://dev.azure.com/kwhite49/CSCD496%20Winter/_apis/build/status/CSCD496%20Winter-Azure%20Web%20App%20for%20ASP.NET-CI?branchName=master)](https://dev.azure.com/kwhite49/CSCD496%20Winter/_build/latest?definitionId=6&branchName=master)
 
 ## Assignment 7
 
