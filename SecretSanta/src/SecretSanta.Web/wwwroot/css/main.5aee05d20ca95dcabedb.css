@@ -6972,3 +6972,6 @@ label.panel-block {
 .input-validation-error {
   border-color: red; }
 
+.bullet-list li {
+  list-style-type: initial; }
+

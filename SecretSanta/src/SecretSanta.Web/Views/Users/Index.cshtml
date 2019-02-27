@@ -1,12 +1,21 @@
-﻿<h1 class="heading">Users</h1>
-<ul>
-    @if (ViewBag.Users.Count == 0)
-    {
-        <li>No Users Added Yet</li>
-    }
-    @foreach (var user in ViewBag.Users)
-    {
-        <li>@user.FirstName @user.LastName</li>
-    }
-</ul>
+﻿
+<h1 class=" is-size-3">Users</h1>
+<div class="content">
+    <ul class="bullet-list">
+        @if (ViewBag.Users.Count == 0)
+        {
+            <li>No Users Added Yet</li>
+        }
+        @foreach (var user in ViewBag.Users)
+        {
+            <li>
+                @user.FirstName @user.LastName
+
+                <a class="button is-info is-small" onclick="alert('A whole lotta edited nothing')">Edit</a>
+                <a class="button is-danger is-small" asp-action="delete" asp-route-id="@user.Id"
+                   onclick="return confirm('Are you sure you want to delete @user.FirstName @user.LastName')">X</a>
+            </li>
+        }
+    </ul>
+</div>
 <a asp-controller="Users" asp-action="Add" class="button is-primary">Add User</a>

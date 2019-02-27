@@ -29,11 +29,11 @@ namespace SecretSanta.Web.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Add(UserInputViewModel viewModel)
         {
             IActionResult result = View();
-            ModelState.AddModelError("FirstName","Wow");
             if (ModelState.IsValid)
             {
                 using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
@@ -45,10 +45,32 @@ namespace SecretSanta.Web.Controllers
 
                         result = RedirectToAction(nameof(Index));
                     }
-                    catch(SwaggerException se)
+                    catch (SwaggerException se)
                     {
                         ViewBag.ErrorMessage = se.Message;
                     }
+                }
+            }
+
+            return result;
+        }
+
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            IActionResult result = View();
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    await secretSantaClient.DeleteUserAsync(id);
+
+                    result = RedirectToAction(nameof(Index));
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.AddModelError("", se.Message);
                 }
             }
 

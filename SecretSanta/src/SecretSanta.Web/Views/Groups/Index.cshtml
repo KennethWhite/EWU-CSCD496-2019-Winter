@@ -1,12 +1,17 @@
-﻿<h1 class="heading">Groups</h1>
-<ul>
-    @if(ViewBag.Groups.Count == 0) {
-    <li>No Groups Added Yet</li>
-    }
-    @foreach (var group in ViewBag.Groups)
-    {
-        <li>@group.Id @group.Name</li>
-    }
-</ul>
+﻿
+<h1 class=" is-size-3">Groups</h1>
+<div class="content">
+    <ul class="bullet-list">
+        @if (ViewBag.Groups.Count == 0)
+        {
+            <li>No Groups Added Yet</li>
+        }
+        @foreach (var group in ViewBag.Groups)
+        {
+            <li>@group.Id @group.Name</li>
+        }
+    </ul>
+</div>
 
+<a asp-controller="Groups" asp-action="Add" class="button is-primary">Add Group</a>
 
