@@ -33,7 +33,7 @@ namespace SecretSanta.Web.Controllers
         public async Task<IActionResult> Add(UserInputViewModel viewModel)
         {
             IActionResult result = View();
-
+            ModelState.AddModelError("FirstName","Wow");
             if (ModelState.IsValid)
             {
                 using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))

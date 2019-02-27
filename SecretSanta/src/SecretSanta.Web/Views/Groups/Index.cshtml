@@ -1,5 +1,8 @@
 ﻿<h1 class="heading">Groups</h1>
 <ul>
+    @if(ViewBag.Groups.Count == 0) {
+    <li>No Groups Added Yet</li>
+    }
     @foreach (var group in ViewBag.Groups)
     {
         <li>@group.Id @group.Name</li>

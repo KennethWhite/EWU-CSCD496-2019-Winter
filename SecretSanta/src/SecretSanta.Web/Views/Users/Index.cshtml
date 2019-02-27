@@ -1,5 +1,9 @@
 ﻿<h1 class="heading">Users</h1>
 <ul>
+    @if (ViewBag.Users.Count == 0)
+    {
+        <li>No Users Added Yet</li>
+    }
     @foreach (var user in ViewBag.Users)
     {
         <li>@user.FirstName @user.LastName</li>
