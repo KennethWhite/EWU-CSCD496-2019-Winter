@@ -11,7 +11,7 @@
             <li>
                 @user.FirstName @user.LastName
 
-                <a class="button is-info is-small" onclick="alert('A whole lotta edited nothing')">Edit</a>
+                <a class="button is-info is-small" asp-action="edit" asp-route-id="@user.Id">Edit</a>
                 <a class="button is-danger is-small" asp-action="delete" asp-route-id="@user.Id"
                    onclick="return confirm('Are you sure you want to delete @user.FirstName @user.LastName')">X</a>
             </li>

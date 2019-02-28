@@ -6,24 +6,24 @@
     <title>@ViewBag.Title</title>
     <!-- Stylesheets -->
     
-    <link href="~/css/main.5aee05d20ca95dcabedb.css" rel="stylesheet" />
+    <link href="~/css/main.606b692b2ac9dd0e4aa3.css" rel="stylesheet" />
     
     <!-- End Stylesheets -->
 </head>
 <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-            <a class="navbar-item" asp-controller="Home">
+            <a class="navbar-item" asp-controller="Home" asp-action="Index">
                 Secret Santa
             </a>
         </div>
 
         <div id="navbarBasicExample" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item" asp-controller="Users">
+                <a class="navbar-item" asp-controller="Users" asp-action="Index">
                     Users
                 </a>
-                <a class="navbar-item" asp-controller="Groups">
+                <a class="navbar-item" asp-controller="Groups"  asp-action="Index">
                     Groups
                 </a>
             </div>
@@ -37,7 +37,7 @@
 
     <!-- Scripts -->
     
-    <script src="~/js/main.5aee05d20ca95dcabedb.js"></script>
+    <script src="~/js/main.606b692b2ac9dd0e4aa3.js"></script>
     
     <!-- End Scripts -->
     @RenderSection("scripts", required: false)
