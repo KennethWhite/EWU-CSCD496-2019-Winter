@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Web.ApiModels;
 
@@ -10,9 +11,12 @@ namespace SecretSanta.Web.Controllers
     public class UsersController : Controller
     {
         private IHttpClientFactory ClientFactory { get; }
-        public UsersController(IHttpClientFactory clientFactory)
+        private IMapper Mapper { get; }
+
+        public UsersController(IHttpClientFactory clientFactory, IMapper mapper)
         {
             ClientFactory = clientFactory;
+            Mapper = mapper;
         }
         public async Task<IActionResult> Index()
         {
@@ -100,23 +104,23 @@ namespace SecretSanta.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(UserViewModel user)
         {
-            //IActionResult result = View();
-            //using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
-            //{
-            //    try
-            //    {
-            //        var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-            //        await secretSantaClient.DeleteUserAsync(id);
+            IActionResult result = View();
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    await secretSantaClient.UpdateUserAsync(user.Id, Mapper.Map<UserInputViewModel>(user));
 
-            //        result = RedirectToAction(nameof(Index));
-            //    }
-            //    catch (SwaggerException se)
-            //    {
-            //        ModelState.AddModelError("", se.Message);
-            //    }
-            //}
+                    result = RedirectToAction(nameof(Index));
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.AddModelError("", se.Message);
+                }
+            }
 
-            return null;
+            return result;
         }
     }
 }
