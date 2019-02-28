@@ -1,5 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Web.ApiModels;
 
@@ -8,9 +9,11 @@ namespace SecretSanta.Web.Controllers
     public class GroupsController : Controller
     {
         private IHttpClientFactory ClientFactory { get; }
-        public GroupsController(IHttpClientFactory clientFactory)
+        private IMapper Mapper { get; }
+        public GroupsController(IHttpClientFactory clientFactory, IMapper mapper)
         {
             ClientFactory = clientFactory;
+            Mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -105,7 +108,7 @@ namespace SecretSanta.Web.Controllers
                 try
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    //await secretSantaClient.UpdateGroupAsync(group.Id, group);
+                    await secretSantaClient.UpdateGroupAsync(group.Id, Mapper.Map<GroupInputViewModel>(group));
 
                     result = RedirectToAction(nameof(Index));
                 }
@@ -114,8 +117,7 @@ namespace SecretSanta.Web.Controllers
                     ModelState.AddModelError("", se.Message);
                 }
             }
-
-            return null;
+            return result;
         }
 
 

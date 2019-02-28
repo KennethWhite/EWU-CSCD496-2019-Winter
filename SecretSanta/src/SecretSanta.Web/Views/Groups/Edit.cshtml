@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewData["Title"] = "Edit";
+}
+
+@model GroupViewModel
+
+<h1 class="is-size-3">Edit Group</h1>
+
+<div asp-validation-summary="All"></div>
+<form asp-route="Edit">
+    <input asp-for="Id" type="hidden" />
+    <div asp-validation-summary="All" class="help is-danger"></div>
+    <div class="form-group field">
+        <label asp-for="Name" class="label"></label>
+        <input asp-for="Name" class="input" required="required"/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="field is-grouped is-horizontal">
+        <div class="control">
+            <button class="button is-primary">Submit</button>
+        </div>
+        <div class="control">
+            <a asp-controller="Users" asp-action="Index" class="button is-light">Cancel</a>
+        </div>
+    </div>
+</form>
