@@ -75,5 +75,68 @@ namespace SecretSanta.Web.Controllers
         }
 
 
+        public async Task<IActionResult> Delete(int id)
+        {
+            IActionResult result = View();
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    await secretSantaClient.DeleteGiftAsync(id);
+
+                    result = RedirectToAction(nameof(Index));
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.AddModelError("", se.Message);
+                }
+            }
+
+            return result;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            GiftViewModel fetchedGift = null;
+
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    fetchedGift = await secretSantaClient.GetGiftAsync(id);
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.AddModelError("", se.Message);
+                }
+            }
+            return View(fetchedGift);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(GiftInputViewModel gift)
+        {
+            IActionResult result = View();
+            using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
+            {
+                try
+                {
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    await secretSantaClient.UpdateUserAsync(gift.Id, Mapper.Map<UserInputViewModel>(gift));
+
+                    result = RedirectToAction(nameof(Index));
+                }
+                catch (SwaggerException se)
+                {
+                    ModelState.AddModelError("", se.Message);
+                }
+            }
+
+            return result;
+        }
+
     }
 }

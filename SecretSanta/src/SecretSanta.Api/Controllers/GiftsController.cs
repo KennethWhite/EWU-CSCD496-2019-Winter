@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -37,6 +38,44 @@ namespace SecretSanta.Api.Controllers
 
             return Ok(Mapper.Map<GiftViewModel>(gift));
         }
+
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> UpdateGift(int id, GiftInputViewModel viewModel)
+        {
+            if (viewModel == null)
+            {
+                return BadRequest();
+            }
+            var fetchedGift = await GiftService.GetGift(id);
+            if (fetchedGift == null)
+            {
+                return NotFound();
+            }
+
+            Mapper.Map(viewModel, fetchedGift);
+            await GiftService.UpdateGift(fetchedGift);
+            return NoContent();
+        }
+
+
+        // DELETE api/Gift/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteGift(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("A Gift id must be specified");
+            }
+
+            await GiftService.RemoveGift(id);
+
+            return Ok();
+        }
+
 
         [HttpPost]
         public async Task<ActionResult<GiftViewModel>> CreateGift(GiftInputViewModel viewModel)

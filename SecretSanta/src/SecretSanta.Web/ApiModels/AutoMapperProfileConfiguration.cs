@@ -11,7 +11,7 @@ namespace SecretSanta.Web.ApiModels
         public AutoMapperProfileConfiguration()
         {
             CreateMap<UserInputViewModel, UserViewModel>();
-           
+            CreateMap<GiftInputViewModel, GiftViewModel>();
         }
     }
 }
