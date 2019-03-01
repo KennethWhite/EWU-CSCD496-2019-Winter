@@ -1,10 +1,14 @@
 ﻿@model SecretSanta.Web.ApiModels.GroupInputViewModel
 
 @{
-    ViewData["Title"] = "Add";
+    ViewData["Title"] = "Add a Group";
 }
 
 <h1 class="is-size-3">Add Group</h1>
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <span class="help is-danger">@ViewBag.ErrorMessage</span>
+}
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,12 +23,10 @@
                 <div class="control">
                     <button class="button is-primary">Create</button>
                 </div>
-                <div class="control">
-                    <button asp-controller="Groups" asp-action="Index" class="button is-light">Cancel</button>
-                </div>
             </div>
         </form>
     </div>
 </div>
+<button asp-controller="Groups" asp-action="Index" class="button is-light">Cancel</button>
 
 

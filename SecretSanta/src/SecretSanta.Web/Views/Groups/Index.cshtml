@@ -1,5 +1,11 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Groups";
+}
 <h1 class="is-size-3 heading">Groups</h1>
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <span class="help is-danger">@ViewBag.ErrorMessage</span>
+}
 <div class="content">
     <ul class="bullet-list">
         @if (ViewBag.Groups.Count == 0)

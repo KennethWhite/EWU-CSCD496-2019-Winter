@@ -1,12 +1,18 @@
 ﻿@model SecretSanta.Web.ApiModels.GiftViewModel
-
+@{
+    ViewData["Title"] = "Edit a Gift";
+}
 <h1 class="is-size-3">Edit Gift</h1>
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <span class="help is-danger">@ViewBag.ErrorMessage</span>
+}
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" asp-route-userId="@ViewBag.UserId">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input asp-for="Id" class="form-control" type="hidden"/>
+            <input asp-for="Id" class="form-control" type="hidden" />
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />

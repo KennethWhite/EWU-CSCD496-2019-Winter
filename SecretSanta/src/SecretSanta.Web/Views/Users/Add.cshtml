@@ -1,4 +1,7 @@
 ﻿@model UserInputViewModel
+@{
+    ViewData["Title"] = "Add a User";
+}
 @if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMessage))
 {
     <div>@ViewBag.ErrorMessage</div>
@@ -11,7 +14,7 @@
         <label class="label" asp-for="FirstName">First Name</label>
         <div class="control">
             <input class="input" type="text" asp-for="FirstName" />
-            <span asp-validation-for="FirstName" class="help is-danger" ></span>
+            <span asp-validation-for="FirstName" class="help is-danger"></span>
         </div>
     </div>
     <div class="field">

@@ -1,5 +1,7 @@
 ﻿@model UserViewModel
-
+@{
+    ViewData["Title"] = "Edit a User";
+}
 <h1 class="is-size-3">Edit User</h1>
 
 <div asp-validation-summary="All"></div>
@@ -8,7 +10,7 @@
     <div class="field">
         <label class="label" asp-for="FirstName">First Name</label>
         <div class="control">
-            <input class="input" type="text" asp-for="FirstName" required/>
+            <input class="input" type="text" asp-for="FirstName" required />
             <span asp-validation-for="FirstName" class="help is-danger"></span>
         </div>
     </div>

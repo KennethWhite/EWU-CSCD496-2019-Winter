@@ -1,5 +1,9 @@
 ﻿
 <h1 class=" is-size-3 heading">Users</h1>
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <span class="help is-danger">@ViewBag.ErrorMessage</span>
+}
 <div class="content">
     <ul class="bullet-list">
         @if (ViewBag.Users.Count == 0)

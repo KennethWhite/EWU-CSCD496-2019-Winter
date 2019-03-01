@@ -84,9 +84,9 @@ namespace SecretSanta.Web.Controllers
             {
                 try
                 {
+                    ViewBag.UserId = userId;            
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
                     ViewBag.Gifts = await secretSantaClient.GetGiftsForUserAsync(userId);
-                    ViewBag.UserId = userId;
                 }
                 catch (SwaggerException se)
                 {
@@ -106,7 +106,7 @@ namespace SecretSanta.Web.Controllers
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
                     await secretSantaClient.DeleteGiftAsync(giftId);
-                    var routeValues = new RouteValueDictionary(new { userId = userId });
+                    var routeValues = new RouteValueDictionary(new { userId });
                     result = RedirectToAction(nameof(UserGifts), routeValues);
                 }
                 catch (SwaggerException se)
@@ -119,7 +119,7 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(int giftId, int userId)
         {
             GiftViewModel fetchedGift = null;
 
@@ -127,8 +127,9 @@ namespace SecretSanta.Web.Controllers
             {
                 try
                 {
+                    ViewBag.UserId = userId;
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    fetchedGift = await secretSantaClient.GetGiftAsync(id);
+                    fetchedGift = await secretSantaClient.GetGiftAsync(giftId);
                 }
                 catch (SwaggerException se)
                 {
@@ -139,17 +140,27 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(GiftViewModel gift)
+        public async Task<IActionResult> Edit(GiftViewModel gift, int userId)
         {
             IActionResult result = View();
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
             {
                 try
                 {
-                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    await secretSantaClient.UpdateGiftAsync(gift.Id, Mapper.Map<GiftInputViewModel>(gift));
 
-                    result = RedirectToAction(nameof(Index));
+                    var inputGift = new GiftInputViewModel
+                    {
+                        Title = gift.Title,
+                        Description = gift.Description,
+                        OrderOfImportance = gift.OrderOfImportance, // this is gross and I don't like it
+                        Url = gift.Url,                             // would it be better to add an exception to the mapper
+                        UserId = userId                             // that allows GiftViewModel to be mapped to GiftInputViewModel?
+                    };
+                    var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
+                    await secretSantaClient.UpdateGiftAsync(gift.Id, inputGift);
+
+                    var routeValues = new RouteValueDictionary(new { userId });
+                    result = RedirectToAction(nameof(UserGifts), routeValues);
                 }
                 catch (SwaggerException se)
                 {
