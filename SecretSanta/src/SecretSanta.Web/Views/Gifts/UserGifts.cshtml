@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Gifts";
+}
+<h1 class=" is-size-3 heading"> Gifts</h1>
+<div class="content">
+    <ul class="bullet-list">
+        @if (ViewBag.Gifts.Count == 0)
+        {
+            <li>No Gifts Added Yet</li>
+        }
+        @foreach (var gift in ViewBag.Gifts)
+        {
+            <li>
+                @gift.Title
+                <a class="button is-info is-small" asp-action="edit" asp-route-id="@gift.Id">Edit</a>
+                <a class="button is-danger is-small" asp-action="delete" asp-route-id="@gift.Id"
+                   onclick="return confirm('Are you sure you want to delete @gift.Title')">X</a>
+            </li>
+        }
+    </ul>
+</div>
+<a asp-controller="Gifts" asp-action="Add" asp-route-userId="@ViewBag.UserId" class="button is-primary">Add Gift</a>

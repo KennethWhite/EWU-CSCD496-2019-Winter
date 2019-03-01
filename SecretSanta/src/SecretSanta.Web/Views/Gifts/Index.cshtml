@@ -8,10 +8,9 @@
         }
         @foreach (var user in ViewBag.Users)
         {
-            <li>
+            <a class="button is-info is-small is-primary" asp-action="userGifts" asp-route-userId="@user.Id">
                 @user.FirstName @user.LastName
-                <a class="button is-info is-small is-primary" asp-action="add" asp-route-id="@user.Id">Manage Gifts</a>
-            </li>
+            </a>
         }
     </ul>
 </div>
