@@ -1,0 +1,21 @@
+﻿
+<h1 class=" is-size-3 heading">Users</h1>
+<div class="content">
+    <ul class="bullet-list">
+        @if (ViewBag.Users.Count == 0)
+        {
+            <li>No Users Added Yet</li>
+        }
+        @foreach (var gift in ViewBag.Gifts)
+        {
+            <li>
+                @gift.Title @gift.Description
+
+                <a class="button is-info is-small" onclick="alert('Super Not Implemented!!!')">Edit</a>
+                <a class="button is-danger is-small"
+                   onclick="return confirm('Super Not Implemented!!! Are you sure you want to delete @gift.FirstName')">X</a>
+            </li>
+        }
+    </ul>
+</div>
+<a asp-controller="Gift" asp-action="Add" class="button is-primary">Add User</a>
