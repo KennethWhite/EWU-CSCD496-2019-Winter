@@ -97,7 +97,7 @@ namespace SecretSanta.Web.Controllers
         }
 
 
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int giftId, int userId)
         {
             IActionResult result = View();
             using (var httpClient = ClientFactory.CreateClient("SecretSantaApi"))
@@ -105,9 +105,9 @@ namespace SecretSanta.Web.Controllers
                 try
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    await secretSantaClient.DeleteGiftAsync(id);
-
-                    result = RedirectToAction(nameof(Index));
+                    await secretSantaClient.DeleteGiftAsync(giftId);
+                    var routeValues = new RouteValueDictionary(new { userId = userId });
+                    result = RedirectToAction(nameof(UserGifts), routeValues);
                 }
                 catch (SwaggerException se)
                 {
@@ -147,7 +147,7 @@ namespace SecretSanta.Web.Controllers
                 try
                 {
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
-                    await secretSantaClient.UpdateUserAsync(gift.Id, Mapper.Map<UserInputViewModel>(gift));
+                    await secretSantaClient.UpdateGiftAsync(gift.Id, Mapper.Map<GiftInputViewModel>(gift));
 
                     result = RedirectToAction(nameof(Index));
                 }

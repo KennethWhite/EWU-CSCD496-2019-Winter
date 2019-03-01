@@ -12,8 +12,8 @@
         {
             <li>
                 @gift.Title
-                <a class="button is-info is-small" asp-action="edit" asp-route-id="@gift.Id">Edit</a>
-                <a class="button is-danger is-small" asp-action="delete" asp-route-id="@gift.Id"
+                <a class="button is-info is-small" asp-action="edit" asp-route-giftId="@gift.Id">Edit</a>
+                <a class="button is-danger is-small" asp-action="delete" asp-route-giftId="@gift.Id" asp-route-userId="@ViewBag.UserId"
                    onclick="return confirm('Are you sure you want to delete @gift.Title')">X</a>
             </li>
         }
