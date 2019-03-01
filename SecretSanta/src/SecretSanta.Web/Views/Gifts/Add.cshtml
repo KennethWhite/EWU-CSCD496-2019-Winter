@@ -1,0 +1,68 @@
+﻿@model SecretSanta.Web.ApiModels.GiftInputViewModel
+
+@{
+    ViewData["Title"] = "Add";
+}
+<h1>Add</h1>
+
+<hr />
+@if (ViewBag.Gifts.Count == 0)
+{
+    <li>No Gifts Added Yet</li>
+}
+@if (ViewBag.Gifts.Count > 0)
+{
+    <h2>List of gifts</h2>
+}
+@foreach (var gift in ViewBag.Gifts)
+{
+    <li>
+        @gift.Title
+
+        <a class="button is-info is-small" asp-action="edit" asp-route-id="@gift.Title">Edit</a>
+        <a class="button is-danger is-small" asp-action="delete" asp-route-id="@gift.Title"
+           onclick="return confirm('Are you sure you want to delete @gift.Title')">X</a>
+    </li>
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrderOfImportance" class="control-label"></label>
+                <input asp-for="OrderOfImportance" class="form-control" />
+                <span asp-validation-for="OrderOfImportance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden="hidden">
+                <input asp-for="UserId" class="form-control" value="@ViewBag.UserId" />
+                <span asp-validation-for="UserId" class="text-danger"></span>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-primary">Create</button>
+                </div>
+                <div class="control">
+                    <button asp-controller="Gifts" asp-action="Index" class="button is-light">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

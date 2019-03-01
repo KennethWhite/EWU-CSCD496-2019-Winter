@@ -29,7 +29,7 @@ namespace SecretSanta.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public IActionResult Add(int id)
         {
             return View();
         }

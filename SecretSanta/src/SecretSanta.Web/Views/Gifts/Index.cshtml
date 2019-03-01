@@ -6,16 +6,13 @@
         {
             <li>No Users Added Yet</li>
         }
-        @foreach (var gift in ViewBag.Gifts)
+        @foreach (var user in ViewBag.Users)
         {
             <li>
-                @gift.Title @gift.Description
-
-                <a class="button is-info is-small" onclick="alert('Super Not Implemented!!!')">Edit</a>
-                <a class="button is-danger is-small"
-                   onclick="return confirm('Super Not Implemented!!! Are you sure you want to delete @gift.FirstName')">X</a>
+                @user.FirstName @user.LastName
+                <a class="button is-info is-small is-primary" asp-action="add" asp-route-id="@user.Id">Manage Gifts</a>
             </li>
         }
     </ul>
 </div>
-<a asp-controller="Gift" asp-action="Add" class="button is-primary">Add User</a>
+
