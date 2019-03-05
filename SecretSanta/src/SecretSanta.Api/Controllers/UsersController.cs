@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
@@ -18,11 +19,13 @@ namespace SecretSanta.Api.Controllers
     {
         private IUserService UserService { get; }
         private IMapper Mapper { get; }
+        private ILogger Logger { get; }
 
-        public UsersController(IUserService userService, IMapper mapper)
+        public UsersController(IUserService userService, IMapper mapper, ILogger logger)
         {
             UserService = userService;
             Mapper = mapper;
+            Logger = logger;
         }
 
         // GET api/User
@@ -39,6 +42,7 @@ namespace SecretSanta.Api.Controllers
             var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
+                Logger.LogDebug($"{nameof(fetchedUser)} not found on call to {nameof(GetUser)} with {nameof(id)} = {id}. BadRequest Returned.");
                 return NotFound();
             }
 
@@ -49,8 +53,9 @@ namespace SecretSanta.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<UserViewModel>> CreateUser(UserInputViewModel viewModel)
         {
-            if (User == null)
+            if (viewModel == null)
             {
+                Logger.LogDebug($"{nameof(viewModel)} null on call to {nameof(CreateUser)}. BadRequest Returned.");
                 return BadRequest();
             }
 
@@ -65,11 +70,13 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Logger.LogDebug($"{nameof(viewModel)} null on call to {nameof(CreateUser)}. BadRequest Returned.");
                 return BadRequest();
             }
             var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
+                Logger.LogDebug($"{nameof(fetchedUser)} null after call to {nameof(UserService.GetById)}. NotFound Returned.", id);
                 return NotFound();
             }
 
@@ -84,6 +91,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
+                Logger.LogDebug($"{nameof(id)} invalid on call to {nameof(DeleteUser)}. BadRequest Returned.", id);
                 return BadRequest("A User id must be specified");
             }
 

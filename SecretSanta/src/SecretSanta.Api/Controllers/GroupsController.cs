@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
@@ -18,8 +19,9 @@ namespace SecretSanta.Api.Controllers
     {
         private IGroupService GroupService { get; }
         private IMapper Mapper { get; }
+        private ILogger Logger { get; }
 
-        public GroupsController(IGroupService groupService, IMapper mapper)
+        public GroupsController(IGroupService groupService, IMapper mapper, ILogger logger)
         {
             GroupService = groupService;
             Mapper = mapper;
@@ -39,6 +41,7 @@ namespace SecretSanta.Api.Controllers
             var group = await GroupService.GetById(id);
             if (group == null)
             {
+                Logger.LogDebug($"{nameof(group)} null after call to {nameof(GroupService.GetById)}. NotFound Returned.");
                 return NotFound();
             }
 
@@ -51,6 +54,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Logger.LogDebug($"{nameof(viewModel)} null on call to {nameof(CreateGroup)}. BadRequest Returned.");
                 return BadRequest();
             }
             var createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel));
@@ -63,11 +67,13 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
+                Logger.LogDebug($"{nameof(viewModel)} null on call to {nameof(UpdateGroup)}. BadRequest Returned.");
                 return BadRequest();
             }
             var group = await GroupService.GetById(id);
             if (group == null)
             {
+                Logger.LogDebug($"{nameof(group)} null after call to {nameof(GroupService.GetById)}. BadRequest Returned.");
                 return NotFound();
             }
 
@@ -83,6 +89,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
+                Logger.LogDebug($"{nameof(id)} invalid on call to {nameof(GroupService.GetById)}. BadRequest Returned.", id);
                 return BadRequest("A group id must be specified");
             }
 
@@ -90,6 +97,7 @@ namespace SecretSanta.Api.Controllers
             {
                 return Ok();
             }
+            Logger.LogDebug($"No group found for the specified parameeter {nameof(id)}, NotFound returned", id);
             return NotFound();
         }
     }
