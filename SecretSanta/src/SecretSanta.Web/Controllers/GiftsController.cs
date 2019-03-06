@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -147,15 +145,8 @@ namespace SecretSanta.Web.Controllers
             {
                 try
                 {
-
-                    var inputGift = new GiftInputViewModel
-                    {
-                        Title = gift.Title,
-                        Description = gift.Description,
-                        OrderOfImportance = gift.OrderOfImportance, // this is gross and I don't like it
-                        Url = gift.Url,                             // would it be better to add an exception to the mapper
-                        UserId = userId                             // that allows GiftViewModel to be mapped to GiftInputViewModel?
-                    };
+                    var inputGift = Mapper.Map<GiftInputViewModel>(gift);
+                    inputGift.UserId = userId;
                     var secretSantaClient = new SecretSantaClient(httpClient.BaseAddress.ToString(), httpClient);
                     await secretSantaClient.UpdateGiftAsync(gift.Id, inputGift);
 
