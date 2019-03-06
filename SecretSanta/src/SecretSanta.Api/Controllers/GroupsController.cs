@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,9 +20,8 @@ namespace SecretSanta.Api.Controllers
     {
         private IGroupService GroupService { get; }
         private IMapper Mapper { get; }
-        private ILogger Logger { get; }
 
-        public GroupsController(IGroupService groupService, IMapper mapper, ILogger logger)
+        public GroupsController(IGroupService groupService, IMapper mapper)
         {
             GroupService = groupService;
             Mapper = mapper;
@@ -41,7 +41,7 @@ namespace SecretSanta.Api.Controllers
             var group = await GroupService.GetById(id);
             if (group == null)
             {
-                Logger.LogDebug($"{nameof(group)} null after call to {nameof(GroupService.GetById)}. NotFound Returned.");
+                Log.Logger.Debug($"{nameof(group)} null after call to {nameof(GroupService.GetById)}. NotFound Returned.");
                 return NotFound();
             }
 
@@ -54,10 +54,11 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
-                Logger.LogDebug($"{nameof(viewModel)} null on call to {nameof(CreateGroup)}. BadRequest Returned.");
+                Log.Logger.Debug($"{nameof(viewModel)} null on call to {nameof(CreateGroup)}. BadRequest Returned.");
                 return BadRequest();
             }
             var createdGroup = await GroupService.AddGroup(Mapper.Map<Group>(viewModel));
+            Log.Logger.Information($"Group was created.", viewModel);
             return CreatedAtAction(nameof(GetGroup), new { id = createdGroup.Id}, Mapper.Map<GroupViewModel>(createdGroup));
         }
 
@@ -67,13 +68,13 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
-                Logger.LogDebug($"{nameof(viewModel)} null on call to {nameof(UpdateGroup)}. BadRequest Returned.");
+                Log.Logger.Debug($"{nameof(viewModel)} null on call to {nameof(UpdateGroup)}. BadRequest Returned.");
                 return BadRequest();
             }
             var group = await GroupService.GetById(id);
             if (group == null)
             {
-                Logger.LogDebug($"{nameof(group)} null after call to {nameof(GroupService.GetById)}. BadRequest Returned.");
+                Log.Logger.Debug($"{nameof(group)} null after call to {nameof(GroupService.GetById)}. BadRequest Returned.");
                 return NotFound();
             }
 
@@ -89,15 +90,16 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
-                Logger.LogDebug($"{nameof(id)} invalid on call to {nameof(GroupService.GetById)}. BadRequest Returned.", id);
+                Log.Logger.Debug($"{nameof(id)} invalid on call to {nameof(GroupService.GetById)}. BadRequest Returned.", id);
                 return BadRequest("A group id must be specified");
             }
 
             if (await GroupService.DeleteGroup(id))
             {
+                Log.Logger.Information($"Group with id = {id} was deleted.");
                 return Ok();
             }
-            Logger.LogDebug($"No group found for the specified parameeter {nameof(id)}, NotFound returned", id);
+            Log.Logger.Debug($"No group found for the specified parameeter {nameof(id)}, NotFound returned", id);
             return NotFound();
         }
     }

@@ -9,6 +9,7 @@ using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,13 +21,11 @@ namespace SecretSanta.Api.Controllers
     {
         private IGiftService GiftService { get; }
         private IMapper Mapper { get; }
-        private ILogger Logger { get; }
 
-        public GiftsController(IGiftService giftService, IMapper mapper, ILogger logger)
+        public GiftsController(IGiftService giftService, IMapper mapper)
         {
             GiftService = giftService;
             Mapper = mapper;
-            Logger = logger;
         }
 
         [HttpGet]
@@ -36,7 +35,7 @@ namespace SecretSanta.Api.Controllers
 
             if (gift == null)
             {
-                Logger.LogDebug($"{nameof(gift)} null after call to {nameof(GiftService.GetGift)}. NotFound Returned.");
+                Log.Logger.Debug($"{nameof(gift)} null after call to {nameof(GiftService.GetGift)}. NotFound Returned.");
                 return NotFound();
             }
 
@@ -52,7 +51,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
-                Logger.LogDebug($"{nameof(viewModel)} null on call to {nameof(UpdateGift)}. BadRequest Returned.");
+                Log.Logger.Debug($"{nameof(viewModel)} null on call to {nameof(UpdateGift)}. BadRequest Returned.");
                 return BadRequest();
             }
             var fetchedGift = await GiftService.GetGift(id);
@@ -73,12 +72,12 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
-                Logger.LogDebug($"{nameof(id)} invalid on call to {nameof(DeleteGift)}. BadRequest Returned.", id);
+                Log.Logger.Debug($"{nameof(id)} invalid on call to {nameof(DeleteGift)}. BadRequest Returned.", id);
                 return BadRequest("A Gift id must be specified");
             }
 
             await GiftService.RemoveGift(id);
-
+            Log.Logger.Information($"Gift with id = {id} was removed.");
             return Ok();
         }
 
@@ -87,7 +86,7 @@ namespace SecretSanta.Api.Controllers
         public async Task<ActionResult<GiftViewModel>> CreateGift(GiftInputViewModel viewModel)
         {
             var createdGift = await GiftService.AddGift(Mapper.Map<Gift>(viewModel));
-
+            Log.Logger.Information($"Gift was created.", viewModel);
             return CreatedAtAction(nameof(GetGift), new { id = createdGift.Id }, Mapper.Map<GiftViewModel>(createdGift));
         }
 
@@ -97,7 +96,7 @@ namespace SecretSanta.Api.Controllers
         {
             if (userId <= 0)
             {
-                Logger.LogDebug($"{nameof(userId)} invalid on call to {nameof(GiftService.GetGiftsForUser)}. NotFound Returned.", userId);
+                Log.Logger.Debug($"{nameof(userId)} invalid on call to {nameof(GiftService.GetGiftsForUser)}. NotFound Returned.", userId);
                 return NotFound();
             }
             List<Gift> databaseUsers = await GiftService.GetGiftsForUser(userId);

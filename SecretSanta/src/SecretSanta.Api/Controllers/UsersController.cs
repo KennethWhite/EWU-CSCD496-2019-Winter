@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using SecretSanta.Api.ViewModels;
 using SecretSanta.Domain.Models;
 using SecretSanta.Domain.Services.Interfaces;
+using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,13 +20,11 @@ namespace SecretSanta.Api.Controllers
     {
         private IUserService UserService { get; }
         private IMapper Mapper { get; }
-        private ILogger Logger { get; }
 
-        public UsersController(IUserService userService, IMapper mapper, ILogger logger)
+        public UsersController(IUserService userService, IMapper mapper)
         {
             UserService = userService;
             Mapper = mapper;
-            Logger = logger;
         }
 
         // GET api/User
@@ -42,7 +41,7 @@ namespace SecretSanta.Api.Controllers
             var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
-                Logger.LogDebug($"{nameof(fetchedUser)} not found on call to {nameof(GetUser)} with {nameof(id)} = {id}. BadRequest Returned.");
+                Log.Logger.Debug($"{nameof(fetchedUser)} not found on call to {nameof(GetUser)} with {nameof(id)} = {id}. BadRequest Returned.");
                 return NotFound();
             }
 
@@ -55,12 +54,12 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
-                Logger.LogDebug($"{nameof(viewModel)} null on call to {nameof(CreateUser)}. BadRequest Returned.");
+                Log.Logger.Debug($"{nameof(viewModel)} null on call to {nameof(CreateUser)}. BadRequest Returned.");
                 return BadRequest();
             }
 
             var createdUser = await UserService.AddUser(Mapper.Map<User>(viewModel));
-
+            Log.Logger.Information($"Created a new user.", viewModel);
             return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
         }
 
@@ -70,13 +69,13 @@ namespace SecretSanta.Api.Controllers
         {
             if (viewModel == null)
             {
-                Logger.LogDebug($"{nameof(viewModel)} null on call to {nameof(CreateUser)}. BadRequest Returned.");
+                Log.Logger.Debug($"{nameof(viewModel)} null on call to {nameof(CreateUser)}. BadRequest Returned.");
                 return BadRequest();
             }
             var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
-                Logger.LogDebug($"{nameof(fetchedUser)} null after call to {nameof(UserService.GetById)}. NotFound Returned.", id);
+                Log.Logger.Debug($"{nameof(fetchedUser)} null after call to {nameof(UserService.GetById)}. NotFound Returned.", id);
                 return NotFound();
             }
 
@@ -91,12 +90,13 @@ namespace SecretSanta.Api.Controllers
         {
             if (id <= 0)
             {
-                Logger.LogDebug($"{nameof(id)} invalid on call to {nameof(DeleteUser)}. BadRequest Returned.", id);
+                Log.Logger.Debug($"{nameof(id)} invalid on call to {nameof(DeleteUser)}. BadRequest Returned.", id);
                 return BadRequest("A User id must be specified");
             }
 
             if (await UserService.DeleteUser(id))
             {
+                Log.Logger.Information($"Deleted user with Id={id}.");
                 return Ok();
             }
             return NotFound();
