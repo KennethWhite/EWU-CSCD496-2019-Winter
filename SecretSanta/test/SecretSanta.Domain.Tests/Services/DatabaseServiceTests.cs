@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SecretSanta.Domain.Models;
+using System;
 
+[assembly: CLSCompliant(false)]
 namespace SecretSanta.Domain.Tests.Services
 {
     public abstract class DatabaseServiceTests

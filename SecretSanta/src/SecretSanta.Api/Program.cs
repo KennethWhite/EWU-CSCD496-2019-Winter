@@ -14,9 +14,10 @@ using SecretSanta.Api.Models;
 using SecretSanta.Domain.Models;
 using Serilog;
 
+[assembly: CLSCompliant(false)]
 namespace SecretSanta.Api
 {
-    public class Program
+    public static class Program
     {
         public static IConfiguration Configuration { get; } = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())

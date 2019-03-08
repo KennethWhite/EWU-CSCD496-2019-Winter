@@ -8,9 +8,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+[assembly: CLSCompliant(false)]
 namespace SecretSanta.Web
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {

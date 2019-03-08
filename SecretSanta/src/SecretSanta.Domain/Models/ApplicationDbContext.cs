@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using System;
 
+[assembly: CLSCompliant(false)]
 namespace SecretSanta.Domain.Models
 {
     public class ApplicationDbContext : DbContext
