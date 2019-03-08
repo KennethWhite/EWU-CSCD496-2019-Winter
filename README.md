@@ -2,7 +2,7 @@
 #### [cwhite-secretsanta.net](https://cwhite-secretsanta.azurewebsites.net)
 #### For Casey's Devops:   [![Build Status](https://dev.azure.com/CaseyWhite/SecretSanta/_apis/build/status/SecretSanta?branchName=Assignment7)](https://dev.azure.com/CaseyWhite/SecretSanta/_build/latest?definitionId=7&branchName=Assignment7)
 
-
+ 
 
 [![Join the chat at https://gitter.im/IntelliTect/CSCD496-2019-Winter](https://badges.gitter.im/IntelliTect/CSCD496-2019-Winter.svg)](https://gitter.im/IntelliTect/CSCD496-2019-Winter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
