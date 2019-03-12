@@ -146,6 +146,7 @@ namespace SecretSanta.web.UITests
             deleteLink.Click();
 
             //Assert
+            Driver.SwitchTo().Alert().Accept(); // accept the alert popup
             List<string> groupNames = page.DisplayedUsers;
             Assert.IsFalse(groupNames.Contains($"{userFirstName} {userLastName}"));
         }

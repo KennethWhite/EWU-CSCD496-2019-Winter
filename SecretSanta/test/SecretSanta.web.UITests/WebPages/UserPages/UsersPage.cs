@@ -44,7 +44,7 @@ namespace SecretSanta.web.UITests.WebPages.UserPages
             ReadOnlyCollection<IWebElement> deleteLinks =
                 Driver.FindElements(By.CssSelector("a.is-danger"));
 
-            return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{firstName} {lastName}"));
+           return deleteLinks.Single(x => x.GetAttribute("onclick").EndsWith($"{firstName} {lastName}?')"));
         }
 
         public IWebElement EditLink(string userName)
