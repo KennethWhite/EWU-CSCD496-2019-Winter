@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net.Mime;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -14,7 +16,8 @@ namespace SecretSanta.web.UITests
     {
         /* Because this URL is hardcoded, Changes to the port the web project runs on will break all of these tests unless this string is updated */
         private const string RootUrl = "https://localhost:5001/";
-        
+        public TestContext TestContext { get; set; }
+
         private IWebDriver Driver { get; set; }
 
         [TestInitialize]
@@ -26,8 +29,35 @@ namespace SecretSanta.web.UITests
         [TestCleanup]
         public void Cleanup()
         {
-            //Driver.Quit();
-            //Driver.Dispose();
+            if (TestContext.CurrentTestOutcome == UnitTestOutcome.Failed)
+            {
+                SaveScreenshotOfFailure();
+            }
+
+//            Driver.Quit();
+//            Driver.Dispose();
+        }
+
+        private void SaveScreenshotOfFailure()
+        {
+            try
+            {
+                var projectDirectory = Directory.GetCurrentDirectory().Split(@"\bin").First();
+                var outputDirectory = Path.Join(projectDirectory, "FailedTests");
+
+                if (!Directory.Exists(outputDirectory))
+                {
+                    Directory.CreateDirectory(outputDirectory);
+                }
+
+                var outputFilename = Path.Join(outputDirectory, $"{TestContext.TestName}.png");
+                var screenshot = ((ITakesScreenshot) Driver).GetScreenshot();
+                screenshot.SaveAsFile(outputFilename, ScreenshotImageFormat.Png);
+            }
+            catch (Exception e) // catches IO errors/ Permission errors/ anything else
+            {
+                Console.Error.WriteLine($"Exception thrown while saving screenshot of test method {TestContext.TestName}: {e}");
+            }
         }
 
         [TestMethod]
@@ -39,7 +69,7 @@ namespace SecretSanta.web.UITests
             //ACt
             var homePage = new HomePage(Driver);
             homePage.UsersLink.Click();
-            
+
             //Assert
             Assert.IsTrue(Driver.Url.EndsWith(UsersPage.Slug));
         }
@@ -51,10 +81,10 @@ namespace SecretSanta.web.UITests
             var rootUri = new Uri(RootUrl);
             Driver.Navigate().GoToUrl(new Uri(rootUri, UsersPage.Slug));
             var usersPage = new UsersPage(Driver);
-            
+
             //Act
             usersPage.AddUserLink.Click();
-            
+
             //Assert
             Assert.IsTrue(Driver.Url.EndsWith(AddUserPage.Slug));
         }
@@ -71,7 +101,7 @@ namespace SecretSanta.web.UITests
             string userLastName = "Last Name" + Guid.NewGuid().ToString("N");
 
             //Act
-            CreateUser(RootUrl , userFirstName, userLastName);
+            CreateUser(RootUrl, userFirstName, userLastName);
 
             IWebElement editLink = usersPage.EditLink($"{userFirstName} {userLastName}");
             string linkText = editLink.GetAttribute("href");
@@ -92,14 +122,14 @@ namespace SecretSanta.web.UITests
             //Arrange
             string userFirstName = "First Name" + Guid.NewGuid().ToString("N");
             string userLastName = "Last Name" + Guid.NewGuid().ToString("N");
-            
+
             // Act
             UsersPage page = CreateUser(RootUrl, userFirstName, userLastName);
 
             //Assert
             Assert.IsTrue(Driver.Url.EndsWith(UsersPage.Slug));
             List<string> users = page.DisplayedUsers;
-            Assert.IsTrue(users.Contains(userFirstName));
+            Assert.IsTrue(users.Contains($"{userFirstName} {userLastName}"));
         }
 
 
@@ -147,7 +177,6 @@ namespace SecretSanta.web.UITests
         }
 
 
-
         private UsersPage CreateUser(string rootUrl, string firstName, string lastName)
         {
             var rootUri = new Uri(rootUrl);
@@ -162,8 +191,5 @@ namespace SecretSanta.web.UITests
             addUserPage.SubmitButton.Click();
             return page;
         }
-
-        
-
     }
 }
