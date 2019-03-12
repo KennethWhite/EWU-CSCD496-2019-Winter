@@ -333,3 +333,4 @@ ASALocalRun/
 .DS_Store
 
 *.sqlite
+/SecretSanta/test/SecretSanta.Web.UITests/FailedTests

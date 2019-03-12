@@ -15,7 +15,7 @@ namespace SecretSanta.web.UITests
     public class UserPageTests
     {
         /* Because this URL is hardcoded, Changes to the port the web project runs on will break all of these tests unless this string is updated */
-        private const string RootUrl = "https://localhost:5001/";
+        private const string RootUrl = "https://localhost:44357/";
         public TestContext TestContext { get; set; }
 
         private IWebDriver Driver { get; set; }
@@ -112,7 +112,7 @@ namespace SecretSanta.web.UITests
 
             Assert.AreEqual<string>(userID, editPage.CurrentUserID);
             Assert.AreEqual<string>(userFirstName, editPage.FirstNameTextBox.GetAttribute("value"));
-            Assert.AreEqual<string>(userFirstName, editPage.LastNameTextBox.GetAttribute("value"));
+            Assert.AreEqual<string>(userLastName, editPage.LastNameTextBox.GetAttribute("value"));
         }
 
 
