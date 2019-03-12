@@ -120,6 +120,34 @@ namespace SecretSanta.web.UITests
             Assert.IsFalse(groupNames.Contains($"{userFirstName} {userLastName}"));
         }
 
+
+        [TestMethod]
+        public void CanEditUser()
+        {
+            //Arrange
+            string userFirstName = "First Name" + Guid.NewGuid().ToString("N");
+            string userLastName = "Last Name" + Guid.NewGuid().ToString("N");
+            var usersPage = CreateUser(RootUrl, userFirstName, userLastName);
+            usersPage.EditLink($"{userFirstName} {userLastName}").Click();
+            EditUserPage editPage = new EditUserPage(Driver);
+
+            //Act
+            editPage.FirstNameTextBox.Clear();
+            editPage.LastNameTextBox.Clear();
+            string newFirst = "First Name" + Guid.NewGuid().ToString("N");
+            string newLast = "Last Name" + Guid.NewGuid().ToString("N");
+            editPage.FirstNameTextBox.SendKeys(newFirst);
+            editPage.LastNameTextBox.SendKeys(newLast);
+            editPage.SubmitButton.Click();
+
+            //Assert
+            List<string> users = usersPage.DisplayedUsers as List<string>;
+            Assert.IsTrue(users.Contains($"{newFirst} {newLast}"));
+            Assert.IsFalse(users.Contains($"{userFirstName} {userLastName}"));
+        }
+
+
+
         private UsersPage CreateUser(string rootUrl, string firstName, string lastName)
         {
             var rootUri = new Uri(rootUrl);
