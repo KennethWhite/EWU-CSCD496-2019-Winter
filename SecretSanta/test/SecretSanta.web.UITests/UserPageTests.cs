@@ -15,7 +15,7 @@ namespace SecretSanta.web.UITests
     public abstract class UserPageTests
     {
         /* Because this URL is hardcoded, Changes to the port the web project runs on will break all of these tests unless this string is updated */
-        private const string RootUrl = "https://localhost:5001/";
+        private const string RootUrl = "https://localhost:44331/";
         public TestContext TestContext { get; set; }
 
         protected IWebDriver Driver { get; set; }
