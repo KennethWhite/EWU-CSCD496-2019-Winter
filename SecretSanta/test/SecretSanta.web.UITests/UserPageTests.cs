@@ -12,19 +12,15 @@ using SecretSanta.web.UITests.WebPages.UserPages;
 namespace SecretSanta.web.UITests
 {
     [TestClass]
-    public class UserPageTests
+    public abstract class UserPageTests
     {
         /* Because this URL is hardcoded, Changes to the port the web project runs on will break all of these tests unless this string is updated */
-        private const string RootUrl = "https://localhost:44357/";
+        private const string RootUrl = "https://localhost:5001/";
         public TestContext TestContext { get; set; }
 
-        private IWebDriver Driver { get; set; }
+        protected IWebDriver Driver { get; set; }
 
-        [TestInitialize]
-        public void Init()
-        {
-            Driver = new ChromeDriver(Path.GetFullPath("."));
-        }
+      
 
         [TestCleanup]
         public void Cleanup()
@@ -34,8 +30,8 @@ namespace SecretSanta.web.UITests
                 SaveScreenshotOfFailure();
             }
 
-//            Driver.Quit();
-//            Driver.Dispose();
+            Driver.Quit();
+            Driver.Dispose();
         }
 
         private void SaveScreenshotOfFailure()
@@ -59,7 +55,7 @@ namespace SecretSanta.web.UITests
                 Console.Error.WriteLine($"Exception thrown while saving screenshot of test method {TestContext.TestName}: {e}");
             }
         }
-
+        
         [TestMethod]
         public void CanNavigateToUsersPage()
         {
