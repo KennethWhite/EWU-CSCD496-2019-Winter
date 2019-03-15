@@ -1,16 +1,17 @@
-﻿using System.IO;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Edge;
+
 
 namespace SecretSanta.web.UITests
 {
     //[TestClass]
-    //public class FireFoxTests : UserPageTests
+    //public class EdgeTests : UserPageTests
     //{
     //    [TestInitialize]
     //    public void Init()
     //    {
-    //        Driver = new FirefoxDriver(Path.GetFullPath("."));
+    //        Driver = new EdgeDriver(Path.GetFullPath("."));
     //    }
     //}
 }

@@ -7,8 +7,6 @@ namespace SecretSanta.web.UITests.WebPages
     {
         public IWebDriver Driver { get; }
 
-        //Id, LinkText, CssSelector/XPath
-        //public IWebElement GroupsLink => Driver.FindElement(By.CssSelector("a[href=\"/Groups\"]"));
         public IWebElement UsersLink => Driver.FindElement(By.LinkText("Users"));
 
         public HomePage(IWebDriver driver)
